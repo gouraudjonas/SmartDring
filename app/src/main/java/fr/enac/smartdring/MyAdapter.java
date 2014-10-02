@@ -3,7 +3,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import fr.enac.smartdring.fragments.Profils;
+import fr.enac.smartdring.fragments.profiles.Profiles;
 
 
 /**
@@ -43,7 +43,7 @@ class MyAdapter extends FragmentPagerAdapter {
                 break;
         }
 
-        return new Profils(); // !!!!!!!!!!
+        return new Profiles(); // !!!!!!!!!!
      //   return fragment;
     }
 
