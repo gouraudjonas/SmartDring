@@ -16,9 +16,10 @@ import android.view.ViewGroup;
 
 import java.util.Locale;
 
-
+// coucou jonas !!!!
+/////kijinhhjubhygyggygbhy
 public class MainActivity extends Activity implements ActionBar.TabListener {
-
+private int a;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
