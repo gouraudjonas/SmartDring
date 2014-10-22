@@ -1,13 +1,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
-    <item android:id="@+id/add_profil"
-        android:title="Add profil"
+    <item android:id="@+id/add"
+        android:title="Nouveau"
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_new"
     />
+    <item android:id="@+id/edit"
+        android:title="Modifier"
+        android:visible="false"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_edit"
+        />
+    <item android:id="@+id/suppr"
+        android:title="Supprimer"
+        android:visible="false"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_discard"
+        />
     <item android:id="@+id/help"
-        android:title="Help"
+        android:title="Aide"
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_help"
     />

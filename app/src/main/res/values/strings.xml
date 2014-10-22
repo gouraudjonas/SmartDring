@@ -2,10 +2,26 @@
 <resources>
 
     <string name="app_name">SmartDring</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="title_section1">Profils</string>
+    <string name="title_section2">Règles</string>
+    <string name="title_section3">Act. motrices</string>
+    <string name="profile_name">Nom du profil :</string>
+    <string name="rule_name">Nom de la règle :</string>
+    <string name="rule_type">Type de règle :</string>
+    <string name="rule_cond">Condition d\'activation :</string>
+    <string name="rule_profile">Profil appliqué à l\'activation :</string>
+    <string name="enter_name">Entrez le nom de votre profil.</string>
+    <string name="enter_rule">Entrez le nom de votre règle.</string>
+    <string name="audio_system">Volume du système :</string>
+    <string name="audio_ring">Volume de la sonnerie :</string>
+    <string name="audio_notification">Volume des notifications :</string>
+    <string name="audio_alarme">Volume des alarmes :</string>
+    <string name="audio_musique">Volume musique/video/autre :</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_param_profile">Gestion Profil</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_my_map">Carte</string>
+    <string name="title_activity_regles">Regles</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

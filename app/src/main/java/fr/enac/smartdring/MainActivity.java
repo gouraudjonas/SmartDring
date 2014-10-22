@@ -3,14 +3,26 @@ package fr.enac.smartdring;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+
+import fr.enac.smartdring.fragments.profiles.ParamProfile;
+import fr.enac.smartdring.fragments.regles.ParamRegles;
+import fr.enac.smartdring.modele.AppList;
+import fr.enac.smartdring.modele.MyData;
 
 
 /**
@@ -33,8 +45,8 @@ public class MainActivity extends FragmentActivity implements TabListener {
     /* ---- ---- */
 	/* ---- Attributs du modele : ---- */
     private int ongletSelect;
-    static private int positionPrecedente = 0;
 	/* ---- ---- */
+
 
 
     /**
@@ -47,9 +59,6 @@ public class MainActivity extends FragmentActivity implements TabListener {
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.activity_main);
-        Intent formerIntent = getIntent();
-        int ongletSelect = formerIntent.getIntExtra("ONGLETBIS", 0 );
-
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         actionBar = getActionBar();
@@ -73,6 +82,9 @@ public class MainActivity extends FragmentActivity implements TabListener {
             }
 
         });
+
+        AppList builder = new AppList();
+        builder.show(getSupportFragmentManager(), "MyDF");
     }
 
 
@@ -86,6 +98,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        MyData.appelData().setMenu(menu);
         return true;
     }
 
@@ -104,13 +117,8 @@ public class MainActivity extends FragmentActivity implements TabListener {
         regles.setText("Règles");
         regles.setTabListener(this);
 
-        ActionBar.Tab motrices = actionBar.newTab();
-        motrices.setText("Act. Motrices");
-        motrices.setTabListener(this);
-
         actionBar.addTab(profils);
         actionBar.addTab(regles);
-        actionBar.addTab(motrices);
     }
 
 
@@ -121,9 +129,72 @@ public class MainActivity extends FragmentActivity implements TabListener {
      * @see <a href="http://developer.android.com/reference/android/app/Activity.html#onOptionsItemSelected%28android.view.MenuItem%29">onOptionsItemSelected</a>
      */
     @Override
-    public boolean onOptionsItemSelected(final MenuItem ITEM) {
-        // TODO
-        return super.onOptionsItemSelected(ITEM);
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        int id = item.getItemId();
+        if (ongletSelect == 0) { // Si on est sur la page des profils.
+            if (id == R.id.edit) {
+                MyData.appelData().setCreateProfil(false);
+                Intent intent = new Intent(this, ParamProfile.class);
+                startActivity(intent);
+                finish();
+            } else if (id == R.id.add) {
+                MyData.appelData().setCreateProfil(true);
+                Intent intent = new Intent(this, ParamProfile.class);
+                startActivity(intent);
+                finish();
+            } else if (id == R.id.suppr) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                alertDialog.setTitle("Etes-vous sur de vouloir supprimer ce profil ?");
+                alertDialog.setMessage("Il sera definitivement perdu !");
+                alertDialog.setIcon(android.R.drawable.ic_delete);
+                alertDialog.setPositiveButton("OUI",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                MyData.appelData().getListeProfils().remove(MyData.appelData().getProfilSelectedNum());
+                            }
+                        });
+                alertDialog.setNegativeButton("ANNULER",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                alertDialog.show();
+            }
+        }
+        else { // Si on est sur la page des règles.
+            if (id == R.id.edit) {
+                MyData.appelData().setCreateRegle(false);
+                Intent intent = new Intent(this, ParamRegles.class);
+                startActivity(intent);
+                finish();
+            } else if (id == R.id.add) {
+                MyData.appelData().setCreateRegle(true);
+                Intent intent = new Intent(this, ParamRegles.class);
+                startActivity(intent);
+                finish();
+            } else if (id == R.id.suppr) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                alertDialog.setTitle("Etes-vous sur de vouloir supprimer cette règle ?");
+                alertDialog.setMessage("Elle sera definitivement perdue !");
+                alertDialog.setIcon(android.R.drawable.ic_delete);
+                alertDialog.setPositiveButton("OUI",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                MyData.appelData().getListeRegles().remove(MyData.appelData().getRegleSelectedNum());
+                            }
+                        });
+                alertDialog.setNegativeButton("ANNULER",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                alertDialog.show();
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -142,17 +213,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
     public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
         viewPager.setCurrentItem(arg0.getPosition());
         ongletSelect = arg0.getPosition();
-
     }
 
-
-
-    /**
-     * Cette fonction donne la position de l'onglet selectionne par l'utilisateur dans le navigation drawer.
-     * @return la position sous forme d'entier
-     */
-    static public int getPosition () {
-        return positionPrecedente;
-    }
 }
 

@@ -3,7 +3,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import fr.enac.smartdring.fragments.profiles.Profiles;
+import fr.enac.smartdring.fragments.profiles.FragmentProfiles;
+import fr.enac.smartdring.fragments.regles.FragmentRegles;
 
 
 /**
@@ -13,7 +14,7 @@ import fr.enac.smartdring.fragments.profiles.Profiles;
 
 class MyAdapter extends FragmentPagerAdapter {
     /* ---- Attributs : ---- */
-    private final int NB_ONGLETS = 3;
+    private final int NB_ONGLETS = 2;
 	/* ---- ---- */
 
     /**
@@ -36,15 +37,14 @@ class MyAdapter extends FragmentPagerAdapter {
 
         switch (arg0){
             case 0 :
+                fragment = new FragmentProfiles();
                 break;
             case 1 :
-                break;
-            case 2 :
+                fragment = new FragmentRegles();
                 break;
         }
 
-        return new Profiles(); // !!!!!!!!!!
-     //   return fragment;
+        return fragment;
     }
 
 
