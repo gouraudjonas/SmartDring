@@ -60,6 +60,8 @@ public class MainActivity extends FragmentActivity implements TabListener {
         super.onCreate(arg0);
         setContentView(R.layout.activity_main);
 
+        // endroit où mettre le chargement des donnees
+
         viewPager = (ViewPager) findViewById(R.id.pager);
         actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

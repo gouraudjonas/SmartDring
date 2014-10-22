@@ -10,21 +10,25 @@ import fr.enac.smartdring.MyService;
 import fr.enac.smartdring.modele.Profil;
 
 /**
- * Cette classe gère le contexte "le téléphone est face contre le mur".
- * Created by chevalier on 15/10/14.
+ * Created by Jonas on 22/10/2014.
  */
-public class RetournementRule extends Rule implements SensorEventListener {
+public class ProximityRule extends Rule implements SensorEventListener {
     /**
      * Vaut true si le téléphone est face contre le sol, false sinon.
      */
-    private boolean estRetourne = false;
+    private boolean somethingClose = false;
     private Context context;
 
-
-    public RetournementRule (String ruleName, Profil ruleProfil, Integer ruleIconId){
+    /**
+     * Constructeur d'une règle liée au périphérique audio de sortie.
+     *
+     * @param ruleName   Le nom de la règle.
+     * @param ruleProfil Le profil à activer si la règle est vérifiée.
+     * @param ruleIconId L'identifiant de l'icone associée à la règle.
+     */
+    public ProximityRule(String ruleName, Profil ruleProfil, Integer ruleIconId) {
         super(ruleName, ruleProfil, ruleIconId);
     }
-
 
     /**
      * ATTENTION : Méthode devant etre appelé par le service avant abonnement.
@@ -34,21 +38,20 @@ public class RetournementRule extends Rule implements SensorEventListener {
         context = ctx;
     }
 
-
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float pitch_angle = event.values[1];
+        float distance = event.values[0];
 
         // L'effet ne doit se faire que s'il y a un appel, donc on test d'abord ca
         if (MyService.isIncomingCall()) {
             if (this.activationAllowed) {
-                if (Math.abs(pitch_angle) >= 135) {
+                if (distance == 0) {
                     activationProfil(this.getRuleProfil(), context);
-                    estRetourne = true;
+                    somethingClose = true;
                     this.actived = true;
-                } else if (Math.abs(pitch_angle) < 90 && estRetourne) {
+                } else {
                     this.actived = false;
-                    estRetourne = false;
+                    somethingClose = false;
                 }
             }
         }

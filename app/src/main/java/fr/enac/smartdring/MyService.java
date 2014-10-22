@@ -5,19 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioManager;
 import android.os.Binder;
 import android.os.IBinder;
-import android.widget.Toast;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import fr.enac.smartdring.modele.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
+import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.RetournementRule;
 import fr.enac.smartdring.modele.regles.Rule;
 import fr.enac.smartdring.modele.regles.TimerRule;
@@ -26,10 +20,13 @@ public class MyService extends Service {
     private IBinder myBinder = new ServiceInterface();
 
     private SensorManager mSensorManager;
-    private Sensor mSensor;
+    private Sensor mSensorOrientation;
+    private Sensor mSensorProximity;
     private boolean estRetourne = false;
     private AudioPeriphRule test;
 
+    private PhoneStateReceiver mPhoneStateReceiver;
+    static private boolean incomingCall = false;
 
     public MyService() {
     }
@@ -37,12 +34,13 @@ public class MyService extends Service {
     @Override
     public void onCreate (){
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        mSensorOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        mSensorProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
-       // test = new AudioPeriphRule("test", new Profil("a",0,0,0,0,0,0,0), 0/*, new GregorianCalendar()*/);
-       // IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
-       // registerReceiver(test, filter);
-        //registerReceiver(test, new IntentFilter(Intent.ACTION_TIME_TICK));
+        // Phone call management
+        mPhoneStateReceiver = new PhoneStateReceiver();
+        IntentFilter phoneStateFilter = new IntentFilter();
+        registerReceiver(mPhoneStateReceiver, phoneStateFilter);
     }
 
     @Override
@@ -50,11 +48,18 @@ public class MyService extends Service {
         return myBinder;
     }
 
+    static public boolean isIncomingCall(){
+        return incomingCall;
+    }
 
+    static public void setIncomingCall(boolean call){
+        incomingCall = call;
+    }
 
     /* ---- Ajout et retrait d'abonnement de règles ---- */
     /**
      * Méthode qui ajoute un écouteur sur une règle r.
+     *
      * @param r La règle que l'on souhaite écouter.
      */
     public void abonnerRegle (Rule r){
@@ -67,12 +72,19 @@ public class MyService extends Service {
         }
         if (r instanceof RetournementRule){
             ((RetournementRule) r).serviceSetContext(this.getBaseContext());
-            mSensorManager.registerListener((SensorEventListener) r, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener((SensorEventListener) r, mSensorOrientation,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+        }
+        if (r instanceof ProximityRule){
+            ((ProximityRule) r).serviceSetContext(this.getBaseContext());
+            mSensorManager.registerListener((SensorEventListener) r, mSensorProximity,
+                    SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
     /**
      * Méthode qui enlève un écouteur sur une règle r.
+     *
      * @param r La règle que l'on ne souhaite plus écouter.
      */
     public void desabonnerRegle (Rule r){
@@ -83,7 +95,7 @@ public class MyService extends Service {
             unregisterReceiver(r);
         }
         if (r instanceof RetournementRule){
-            mSensorManager.unregisterListener((SensorEventListener) r, mSensor);
+            mSensorManager.unregisterListener((SensorEventListener) r, mSensorOrientation);
         }
     }
     /* ---- ---- */

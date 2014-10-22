@@ -1,7 +1,10 @@
 package fr.enac.smartdring.fragments.regles;
 
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
+import fr.enac.smartdring.modele.regles.ProximityRule;
+import fr.enac.smartdring.modele.regles.RetournementRule;
 import fr.enac.smartdring.modele.regles.Rule;
+import fr.enac.smartdring.modele.regles.TimerRule;
 
 /**
  * Enumération de toutes les sortes de règles proposées par l'application.
@@ -9,19 +12,23 @@ import fr.enac.smartdring.modele.regles.Rule;
  */
 public enum EnumTypeRegle {
     Ecouteurs_Connectes,
-    Telephone_Retourne,
     Heure_Atteinte,
+    Telephone_Retourne,
+    Something_Close,
     Geolocalisation;
 
     public static EnumTypeRegle toEnumTypeRegle (Rule r){
         if (r instanceof AudioPeriphRule){
             return Ecouteurs_Connectes;
         }
-  /*      if (r instanceof ){
-
-        }*/
-        if (r instanceof AudioPeriphRule){
+        if (r instanceof TimerRule){
             return Heure_Atteinte;
+        }
+        if (r instanceof RetournementRule){
+            return Telephone_Retourne;
+        }
+        if (r instanceof ProximityRule){
+            return Something_Close;
         }
 
         return null;

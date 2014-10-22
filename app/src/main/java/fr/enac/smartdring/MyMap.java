@@ -190,7 +190,7 @@ public class MyMap extends Activity  implements GooglePlayServicesClient.Connect
         mLocationClient.disconnect();
     }
 
-    
+
     /* -------- -------- */
 
 

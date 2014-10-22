@@ -28,6 +28,7 @@ import fr.enac.smartdring.fragments.profiles.ProfilesList;
 import fr.enac.smartdring.modele.MyData;
 import fr.enac.smartdring.modele.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
+import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.RetournementRule;
 
 
@@ -71,19 +72,29 @@ public class FragmentRegles extends android.support.v4.app.Fragment {
         ArrayList<String> nom = new ArrayList<String>();
         ArrayList<Integer> icones = new ArrayList<Integer>();
         for (int i=0;i<MyData.appelData().getListeRegles().size();i++){
+
+            // on parcourt pour trouver les AudioPeriphRule
             if (MyData.appelData().getListeRegles().get(i) instanceof AudioPeriphRule){
                 nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
                 icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
             }
-        }
-        for (int i=0;i<MyData.appelData().getListeRegles().size();i++){
+
+            // on parcourt pour trouver les RetournementRule
             if (MyData.appelData().getListeRegles().get(i) instanceof RetournementRule){
                 nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
                 icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
             }
+
+            // on parcourt pour trouver les ProximityRule
+            if (MyData.appelData().getListeRegles().get(i) instanceof ProximityRule){
+                nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
+                icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
+            }
         }
+
         String nameTab [] = new String[MyData.appelData().getListeRegles().size()];
         Integer iconeTab [] = new Integer[MyData.appelData().getListeRegles().size()];
+
         for (int i = 0 ; i < MyData.appelData().getListeRegles().size() ; i++){
             nameTab [i] = nom.get(i);
             iconeTab [i] = icones.get(i);
