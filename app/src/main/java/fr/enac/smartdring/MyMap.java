@@ -86,10 +86,10 @@ public class MyMap extends Activity  implements GooglePlayServicesClient.Connect
                         .radius(1000); // In meters
                 Circle circle = mMap.addCircle(circleOptions);
 
-                Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+                /*Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
                 if (v.hasVibrator()) {
                     v.vibrate(25);
-                }
+                }*/
             }
         });
 
@@ -155,19 +155,18 @@ public class MyMap extends Activity  implements GooglePlayServicesClient.Connect
     * Create a PendingIntent that triggers an IntentService in your
     * app when a geofence transition occurs.
     */
-    private PendingIntent getTransitionPendingIntent() {
+    //private PendingIntent getTransitionPendingIntent() {
         // Create an explicit Intent
-        Intent intent = new Intent(this,
-                ReceiveTransitionsIntentService.class);
+        //Intent intent = new Intent(this,ReceiveTransitionsIntentService.class);
         /*
          * Return the PendingIntent
          */
-        return PendingIntent.getService(
+        /*return PendingIntent.getService(
                 this,
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-    }
+    }*/
 
     @Override
     public void onAddGeofencesResult(int statusCode, String[] strings) {
@@ -191,7 +190,7 @@ public class MyMap extends Activity  implements GooglePlayServicesClient.Connect
         mLocationClient.disconnect();
     }
 
-    }
+    
     /* -------- -------- */
 
 
@@ -203,11 +202,9 @@ public class MyMap extends Activity  implements GooglePlayServicesClient.Connect
         switch (mRequestType) {
             case ADD :
                 // Get the PendingIntent for the request
-                mTransitionPendingIntent =
-                        getTransitionPendingIntent();
+                //mTransitionPendingIntent = getTransitionPendingIntent();
                 // Send a request to add the current geofences
-                mLocationClient.addGeofences(
-                        mCurrentGeofences, pendingIntent, this);
+                //mLocationClient.addGeofences(mCurrentGeofences, pendingIntent, this);
                 break;
         }
 
