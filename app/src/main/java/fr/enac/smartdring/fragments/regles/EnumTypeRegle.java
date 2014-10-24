@@ -4,6 +4,7 @@ import fr.enac.smartdring.modele.regles.AudioPeriphRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.RetournementRule;
 import fr.enac.smartdring.modele.regles.Rule;
+import fr.enac.smartdring.modele.regles.ShakeRule;
 import fr.enac.smartdring.modele.regles.TimerRule;
 
 /**
@@ -15,6 +16,7 @@ public enum EnumTypeRegle {
     Heure_Atteinte,
     Telephone_Retourne,
     Something_Close,
+    Secouer,
     Geolocalisation;
 
     public static EnumTypeRegle toEnumTypeRegle (Rule r){
@@ -29,6 +31,9 @@ public enum EnumTypeRegle {
         }
         if (r instanceof ProximityRule){
             return Something_Close;
+        }
+        if (r instanceof ShakeRule){
+            return Secouer;
         }
 
         return null;

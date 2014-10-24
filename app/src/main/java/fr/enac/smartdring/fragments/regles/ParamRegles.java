@@ -40,6 +40,7 @@ import fr.enac.smartdring.modele.regles.AudioPeriphRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.RetournementRule;
 import fr.enac.smartdring.modele.regles.Rule;
+import fr.enac.smartdring.modele.regles.ShakeRule;
 import fr.enac.smartdring.modele.regles.TimerRule;
 
 /**
@@ -214,6 +215,9 @@ public class ParamRegles extends Activity {
                         typeRegle = EnumTypeRegle.Something_Close;
                         break;
                     case 4:
+                        typeRegle = EnumTypeRegle.Secouer;
+                        break;
+                    case 5:
                         typeRegle = EnumTypeRegle.Geolocalisation;
                         break;
                 }
@@ -297,6 +301,9 @@ public class ParamRegles extends Activity {
                 case Something_Close:
                     r = new ProximityRule(ruleName.getText().toString(), profilActivation, 0);
                     break;
+                case Secouer:
+                    r = new ShakeRule(ruleName.getText().toString(), profilActivation, 0);
+                    break;
             }
             if (MyData.appelData().isCreateRegle()) {
                 MyData.appelData().getListeRegles().add(r);
@@ -365,6 +372,14 @@ public class ParamRegles extends Activity {
                 boutonTime.setVisibility(View.GONE);
                 ruleIndication.setText("Actif si un objet est proche de l'écran du téléphone " +
                         "et qu'il y a un appel.");
+                break;
+            case Secouer:
+                map.setVisibility(View.GONE);
+                afficheTime.setVisibility(View.GONE);
+                afficheDate.setVisibility(View.GONE);
+                boutonDate.setVisibility(View.GONE);
+                boutonTime.setVisibility(View.GONE);
+                ruleIndication.setText("Actif si vous secouer le téléphone.");
                 break;
         }
     }

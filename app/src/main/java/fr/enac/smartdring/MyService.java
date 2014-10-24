@@ -14,6 +14,7 @@ import fr.enac.smartdring.modele.regles.AudioPeriphRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.RetournementRule;
 import fr.enac.smartdring.modele.regles.Rule;
+import fr.enac.smartdring.modele.regles.ShakeRule;
 import fr.enac.smartdring.modele.regles.TimerRule;
 
 public class MyService extends Service {
@@ -22,6 +23,7 @@ public class MyService extends Service {
     private SensorManager mSensorManager;
     private Sensor mSensorOrientation;
     private Sensor mSensorProximity;
+    private Sensor mSensorAccel;
     private boolean estRetourne = false;
     private AudioPeriphRule test;
 
@@ -36,6 +38,7 @@ public class MyService extends Service {
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        mSensorAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // Phone call management
         mPhoneStateReceiver = new PhoneStateReceiver();
@@ -80,6 +83,10 @@ public class MyService extends Service {
             mSensorManager.registerListener((SensorEventListener) r, mSensorProximity,
                     SensorManager.SENSOR_DELAY_NORMAL);
         }
+        if (r instanceof ShakeRule){
+            ((ShakeRule) r).serviceSetContext(this.getBaseContext());
+            mSensorManager.registerListener((SensorEventListener) r,mSensorAccel,SensorManager.SENSOR_DELAY_GAME);
+        }
     }
 
     /**
@@ -96,6 +103,12 @@ public class MyService extends Service {
         }
         if (r instanceof RetournementRule){
             mSensorManager.unregisterListener((SensorEventListener) r, mSensorOrientation);
+        }
+        if (r instanceof ProximityRule){
+            mSensorManager.unregisterListener((SensorEventListener) r, mSensorProximity);
+        }
+        if (r instanceof ShakeRule){
+            mSensorManager.unregisterListener((SensorEventListener) r, mSensorAccel);
         }
     }
     /* ---- ---- */

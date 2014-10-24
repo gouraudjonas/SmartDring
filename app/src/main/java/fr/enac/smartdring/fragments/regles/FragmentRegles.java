@@ -30,6 +30,7 @@ import fr.enac.smartdring.modele.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.RetournementRule;
+import fr.enac.smartdring.modele.regles.ShakeRule;
 
 
 /**
@@ -87,6 +88,12 @@ public class FragmentRegles extends android.support.v4.app.Fragment {
 
             // on parcourt pour trouver les ProximityRule
             if (MyData.appelData().getListeRegles().get(i) instanceof ProximityRule){
+                nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
+                icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
+            }
+
+            // on parcourt pour trouver les ShakeRule
+            if (MyData.appelData().getListeRegles().get(i) instanceof ShakeRule){
                 nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
                 icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
             }
