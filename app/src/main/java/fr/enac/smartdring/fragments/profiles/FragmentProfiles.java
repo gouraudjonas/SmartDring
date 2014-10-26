@@ -1,5 +1,8 @@
 package fr.enac.smartdring.fragments.profiles;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,6 +10,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -139,6 +143,17 @@ public class FragmentProfiles extends Fragment {
         audio.setStreamVolume(audio.STREAM_NOTIFICATION, p.getStreamNotificationValue(), 0);
         audio.setStreamVolume(audio.STREAM_MUSIC, p.getStreamMusicValue(), 0);
         audio.setStreamVolume(audio.STREAM_ALARM, p.getStreamAlarmValue(), 0);
+
+        Context context = this.getContext();
+        final int mID = 1;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context).setSmallIcon(p.getIconeId());
+        Intent intent = new Intent( context, FragmentProfiles.class);
+        PendingIntent pIntent = PendingIntent.getActivity(context, mID , intent, 0);
+        builder.setContentIntent(pIntent);
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notif = builder.build();
+        notif.flags = Notification.FLAG_ONGOING_EVENT;
+        mNotificationManager.notify(mID, notif);
     }
 
     private Context getContext (){

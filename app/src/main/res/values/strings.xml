@@ -18,7 +18,7 @@
     <string name="audio_alarme">Volume des alarmes :</string>
     <string name="audio_musique">Volume musique/video/autre :</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_param_profile">Gestion Profil</string>
+    <string name="title_activity_param_profile">Gestion de Profil</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_my_map">Carte</string>
     <string name="title_activity_regles">Regles</string>

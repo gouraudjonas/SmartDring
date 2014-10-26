@@ -1,42 +1,48 @@
 package fr.enac.smartdring.modele;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.widget.ImageView;
 
 import java.util.List;
+
+import fr.enac.smartdring.R;
+import fr.enac.smartdring.fragments.profiles.ParamProfile;
+import fr.enac.smartdring.fragments.profiles.ProfilesList;
 
 /**
  * Created by chevalier on 10/10/14.
  */
 public class AppList extends DialogFragment {
+    private Activity ctx;
 
-    public AppList (){
+    public AppList (Activity ctx){
         super ();
+        this.ctx = ctx;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final PackageManager pm = getActivity().getPackageManager();
-//get a list of installed apps.
-        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-        String nom [] = new String [packages.size()];
-        for (int i=0;i<packages.size();i++) {
-           // nom [i] = packages.get(i).processName;
-            nom [i]= packages.get(i).loadLabel(getActivity().getPackageManager()).toString();
-        }
+        final Integer ic [] = {R.drawable.home,R.drawable.play,R.drawable.phone,R.drawable.nomute,R.drawable.nomusic2,R.drawable.nomusic,
+        R.drawable.mute, R.drawable.music2, R.drawable.music,R.drawable.man,R.drawable.favoris, R.drawable.course};
+        final String is [] = new String[ic.length];
+
+        ProfilesList p = new ProfilesList(ctx,is,ic);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Coucou")
-                .setItems(nom, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
+        builder.setTitle("Icone du profil")
+                .setAdapter(p, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ParamProfile.setImageButton(ic[i], ctx.getResources().getDrawable(ic[i]));
                     }
                 });
         return builder.create();

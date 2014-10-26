@@ -13,18 +13,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <!--TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            android:layout_gravity="center"
             android:text="@string/profile_name"
-            android:textSize="20dp" />
-        <EditText
-            android:id="@+id/profileName"
-            android:layout_gravity="center"
+            android:textSize="20dp" /-->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_name"/>
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/profileIcone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+           android:id="@+id/profileName"
+           android:layout_gravity="center"
+           android:maxLines="1"
+           android:maxLength="25"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:hint="@string/enter_name"/>
+            </LinearLayout>
+
 
         <!-- Volume Sonnerie -->
         <TextView
@@ -42,7 +55,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/ic_action_ring_volume"
                 android:layout_marginRight="10dp"
             />
                 <SeekBar
@@ -69,7 +82,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/ic_action_chat"
                 android:layout_marginRight="10dp"
                 />
             <SeekBar
@@ -96,7 +109,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/ic_action_phone"
                 android:layout_marginRight="10dp"
                 />
             <SeekBar
@@ -123,7 +136,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/ic_action_video"
                 android:layout_marginRight="10dp"
                 />
             <SeekBar
@@ -150,7 +163,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/ic_action_alarms"
                 android:layout_marginRight="10dp"
                 />
             <SeekBar

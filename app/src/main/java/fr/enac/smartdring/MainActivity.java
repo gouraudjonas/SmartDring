@@ -84,9 +84,6 @@ public class MainActivity extends FragmentActivity implements TabListener {
             }
 
         });
-
-        AppList builder = new AppList();
-        builder.show(getSupportFragmentManager(), "MyDF");
     }
 
 
