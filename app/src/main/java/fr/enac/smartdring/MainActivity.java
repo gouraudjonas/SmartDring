@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
@@ -150,9 +151,24 @@ public class MainActivity extends FragmentActivity implements TabListener {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 MyData.appelData().getListeProfils().remove(MyData.appelData().getProfilSelectedNum());
+                                Intent intent = new Intent(getApplication(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         });
                 alertDialog.setNegativeButton("ANNULER",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                alertDialog.show();
+            } else if (id == R.id.help){
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                alertDialog.setTitle("PAGE DES PROFILS");
+                alertDialog.setMessage("Blabla");
+                alertDialog.setIcon(android.R.drawable.ic_dialog_info);
+                alertDialog.setPositiveButton("FERMER",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();

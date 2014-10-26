@@ -315,12 +315,11 @@ public class ParamRegles extends Activity {
             }
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-            //finish();
+
         } else if (id == R.id.cancel) {
             // On retourne à l'activité principale :
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-            //  finish();
         }
         return super.onOptionsItemSelected(item);
     }

@@ -5,6 +5,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.view.Menu;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,11 +24,13 @@ public class MyData {
 
     private Menu menu;
     private static ArrayList<Profil> listeProfils;
+    private int activeProfilNum = -1;
     private int ProfilSelectedNum;
     private boolean createProfil;
     private static ArrayList<Rule> listeRegles;
     private int RegleSelectedNum;
     private boolean createRegle;
+
 
     /**
      * Construsteur de la classe MyData, vide par defaut.
@@ -96,6 +99,14 @@ public class MyData {
 
     public void setRegleSelectedNum(int regleSelectedNum) {
         RegleSelectedNum = regleSelectedNum;
+    }
+
+    public int getActiveProfil() {
+        return activeProfilNum;
+    }
+
+    public void setActiveProfil(int activeProfilNum) {
+        this.activeProfilNum = activeProfilNum;
     }
     /* ---- ---- */
 }

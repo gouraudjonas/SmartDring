@@ -6,6 +6,5 @@ package fr.enac.smartdring;
  */
 public enum Etat {
     NO_SELECTION,
-    PROFILE_SELECTION,
-    PROFILE_NON_SUPPR_SELECTION
+    PROFILE_SELECTION
 }

@@ -1,6 +1,7 @@
 package fr.enac.smartdring.fragments.profiles;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import fr.enac.smartdring.R;
+import fr.enac.smartdring.modele.MyData;
 
 /**
  * Cette classe est l'adapteur pour la liste des profils de l'application :
@@ -49,6 +51,14 @@ public class ProfilesList extends ArrayAdapter<String> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.profilesIcone);
         txtTitle.setText(web[position]);
         imageView.setImageResource(imageId[position]);
+        if (MyData.appelData().getActiveProfil() == position){
+            rowView.setAlpha(1f);
+            rowView.setBackgroundColor(Color.TRANSPARENT);
+        }
+        else {
+            rowView.setAlpha(0.33f);
+            rowView.setBackgroundColor(Color.TRANSPARENT);
+        }
         return rowView;
     }
 }
