@@ -49,7 +49,7 @@
             android:value="AIzaSyCinZosXXZwG2cn-pLIPzyZNyWHude0aeQ" />
 
         <activity
-            android:name=".fragments.regles.ParamRegles"
+            android:name=".fragments.regles.ParamRules"
             android:label="@string/title_activity_regles" >
         </activity>
     </application>

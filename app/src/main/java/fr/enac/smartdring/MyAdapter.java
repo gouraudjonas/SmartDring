@@ -4,7 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import fr.enac.smartdring.fragments.profiles.FragmentProfiles;
-import fr.enac.smartdring.fragments.regles.FragmentRegles;
+import fr.enac.smartdring.fragments.regles.FragmentRules;
 
 
 /**
@@ -40,7 +40,7 @@ class MyAdapter extends FragmentPagerAdapter {
                 fragment = new FragmentProfiles();
                 break;
             case 1 :
-                fragment = new FragmentRegles();
+                fragment = new FragmentRules();
                 break;
         }
 
