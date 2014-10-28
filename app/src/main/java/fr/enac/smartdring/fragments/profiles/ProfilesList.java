@@ -51,13 +51,15 @@ public class ProfilesList extends ArrayAdapter<String> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.profilesIcone);
         txtTitle.setText(web[position]);
         imageView.setImageResource(imageId[position]);
-        if (MyData.appelData().getActiveProfil() == position){
-            rowView.setAlpha(1f);
-            rowView.setBackgroundColor(Color.TRANSPARENT);
-        }
-        else {
-            rowView.setAlpha(0.33f);
-            rowView.setBackgroundColor(Color.TRANSPARENT);
+
+        if (parent.getId()==R.id.idProfilesList) {
+            if (MyData.appelData().getActiveProfil() == position) {
+                rowView.setAlpha(1f);
+                rowView.setBackgroundColor(Color.TRANSPARENT);
+            } else {
+                rowView.setAlpha(0.33f);
+                rowView.setBackgroundColor(Color.TRANSPARENT);
+            }
         }
         return rowView;
     }

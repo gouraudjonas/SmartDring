@@ -31,8 +31,10 @@ public class ReceiveTransitionsIntentService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
+        /*
         Toast.makeText( this.getBaseContext(), "INTENT",
                 Toast.LENGTH_SHORT).show();
+        Log.d("INTENT","PASS INTENT");
         // First check for errors
         if (LocationClient.hasError(intent)) {
             // Get the error code with a static method
@@ -41,14 +43,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
             Log.e("ReceiveTransitionsIntentService",
                     "Location Services error: " +
                             Integer.toString(errorCode));
-            /*
-             * You can also send the error code to an Activity or
-             * Fragment with a broadcast Intent
-             */
-        /*
-         * If there's no error, get the transition type and the IDs
-         * of the geofence or geofences that triggered the transition
-         */
+
         } else {
             // Get the type of transition (entry or exit)
             int transitionType =
@@ -68,20 +63,29 @@ public class ReceiveTransitionsIntentService extends IntentService {
                     // Store the Id of each geofence
                     triggerIds[i] = triggerList.get(i).getRequestId();
                 }
-                /*
-                 * At this point, you can store the IDs for further use
-                 * display them, or display the details associated with
-                 * them.
-                 */
+
 
                 Toast.makeText( this.getBaseContext(), "ENTER OR LEAVE",
                         Toast.LENGTH_SHORT).show();
+                throw new UnsupportedOperationException();
             }
             // An invalid transition was reported
             else {
                 Log.e("ReceiveTransitionsIntentService",
                         "Geofence transition error: " +
                                 Integer.toString(transitionType));
+            }
+        }*/
+        Log.d("ENTER","ENTER");
+        if (LocationClient.hasError(intent)) {
+            // Handle error
+        } else {
+            int transition = LocationClient.getGeofenceTransition(intent);
+            if ((transition == Geofence.GEOFENCE_TRANSITION_ENTER) ||
+                    (transition == Geofence.GEOFENCE_TRANSITION_EXIT)) {
+               Log.d("GAGNE","GAGNE");
+            } else {
+                // Handle invalid transition
             }
         }
     }

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -45,7 +46,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
     private ActionBar actionBar = null;
     /* ---- ---- */
 	/* ---- Attributs du modele : ---- */
-    private int ongletSelect;
+    private static int ongletSelect;
 	/* ---- ---- */
 
 
@@ -60,6 +61,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.activity_main);
+        int tmp = ongletSelect;
 
         // endroit où mettre le chargement des donnees
 
@@ -68,6 +70,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         addTabs(actionBar);
         viewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+        ongletSelect = tmp;
         viewPager.setCurrentItem(ongletSelect);
         actionBar.setSelectedNavigationItem(ongletSelect);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

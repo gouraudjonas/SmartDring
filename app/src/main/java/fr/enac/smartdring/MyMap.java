@@ -56,7 +56,7 @@ public class MyMap extends Activity  implements GooglePlayServicesClient.Connect
 
     private GoogleMap mMap;
 
-
+static int cpt = 0;
     private ArrayList<StoreLocation> points;
 
 
@@ -74,7 +74,7 @@ private State mGeofenceState;
 
     /* -- Géofence -- */
     // Defines the allowable request types.
-    public enum REQUEST_TYPE {ADD, REMOVE};
+    public enum REQUEST_TYPE {ADD, REMOVE, NONE};
     private REQUEST_TYPE mRequestType;
     // Flag that indicates if a request is underway.
     private boolean mRequestInProgress;
@@ -89,6 +89,8 @@ private State mGeofenceState;
     private PendingIntent pendingIntent;
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
+    PendingIntent mTransitionPendingIntent = null;
+private Location testLocation = null;
 
     /* -- -- */
 
@@ -114,6 +116,21 @@ private State mGeofenceState;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.setMyLocationEnabled(true);
 
+       mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                // Define a LocationClient object
+                mLocationClient.connect();
+
+              testLocation = new Location("flp");
+                testLocation.setLatitude(latLng.latitude);
+                testLocation.setLongitude(latLng.longitude);
+                testLocation.setAccuracy(3);
+
+
+            }
+        });
+
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -123,7 +140,7 @@ private State mGeofenceState;
                         .title("Zone sélectionnée"));
 
                 // Instantiates a new CircleOptions object and defines the center and radius
-                CircleOptions circleOptions = new CircleOptions()
+           /*     CircleOptions circleOptions = new CircleOptions()
                         .center(latLng)
                         .radius(1000); // In meters
                 Circle circle = mMap.addCircle(circleOptions);
@@ -131,21 +148,27 @@ private State mGeofenceState;
                 Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
                 if (v.hasVibrator()) {
                     v.vibrate(25);
-                }
+                }*/
 
                 SimpleGeofence mUIGeofence1 = new SimpleGeofence(
                         "1",
                         Double.valueOf(latLng.latitude),
                         Double.valueOf(latLng.longitude),
-                        Float.valueOf(10),
-                        1000000000,
+                        Float.valueOf(5),
+                        Geofence.NEVER_EXPIRE,
                         // This geofence records only entry transitions
-                        Geofence.GEOFENCE_TRANSITION_ENTER);
+                        Geofence.GEOFENCE_TRANSITION_EXIT | Geofence.GEOFENCE_TRANSITION_ENTER );
                 // Store this flat version
-                mGeofenceStorage.setGeofence("1", mUIGeofence1);
+                mGeofenceStorage.setGeofence(Integer.toString(cpt) , mUIGeofence1);
+                cpt++;
                 mGeofenceList.add(mUIGeofence1.toGeofence());
 mCurrentGeofences.add(mUIGeofence1.toGeofence());
                 addGeofences();
+
+                CircleOptions circleOptions = new CircleOptions()
+                        .center(new LatLng(mUIGeofence1.getLatitude(), mUIGeofence1.getLongitude()))
+                        .radius(mUIGeofence1.getRadius()); // In meters
+                Circle circle = mMap.addCircle(circleOptions);
             }
         });
 
@@ -245,6 +268,9 @@ mCurrentGeofences.add(mUIGeofence1.toGeofence());
          * app when a geofence transition occurs.
          */
     private PendingIntent getTransitionPendingIntent() {
+        if (mTransitionPendingIntent != null){
+            return mTransitionPendingIntent;
+        }
         // Create an explicit Intent
         Intent intent = new Intent(this,
                 ReceiveTransitionsIntentService.class);
@@ -500,25 +526,31 @@ mCurrentGeofences.add(mUIGeofence1.toGeofence());
         */
     @Override
     public void onConnected(Bundle dataBundle) {
+        mLocationClient.setMockMode(true);
+        if (testLocation!=null)
+        mLocationClient.setMockLocation(testLocation);
         Log.d("ON CONNECT","ON CONNECT");
         switch (mRequestType) {
             case ADD :
                 Log.d("ON ADD","ON ADD");
                 // Get the PendingIntent for the request
-                PendingIntent mTransitionPendingIntent = getTransitionPendingIntent();
+                 mTransitionPendingIntent = getTransitionPendingIntent();
                 // Send a request to add the current geofences
                 mLocationClient.addGeofences(
                         mCurrentGeofences, mTransitionPendingIntent, this);
+                break;
+            case NONE : break;
         }
+        mRequestType = REQUEST_TYPE.NONE;
 
         // Display the connection status
         Toast.makeText(this, "Connecté", Toast.LENGTH_SHORT).show();
-        mCurrentLocation = mLocationClient.getLastLocation();
+     /*   mCurrentLocation = mLocationClient.getLastLocation();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 14.0f));
         mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
                 .title("Votre position")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));*/
     }
 
 
@@ -539,6 +571,7 @@ mCurrentGeofences.add(mUIGeofence1.toGeofence());
              * You can send out a broadcast intent or update the UI.
              * geofences into the Intent's extended data.
              */
+            Log.d("GEOFENCE_RESULT","OK !");
         } else {
             // If adding the geofences failed
             /*
@@ -546,6 +579,7 @@ mCurrentGeofences.add(mUIGeofence1.toGeofence());
              * You can log the error using Log.e() or update
              * the UI.
              */
+            Log.d("GEOFENCE_RESULT","FAIL !");
         }
         // Turn off the in progress flag and disconnect the client
         mInProgress = false;

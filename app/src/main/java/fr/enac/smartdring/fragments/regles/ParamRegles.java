@@ -9,8 +9,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +37,7 @@ import java.util.GregorianCalendar;
 import fr.enac.smartdring.MainActivity;
 import fr.enac.smartdring.MyService;
 import fr.enac.smartdring.R;
+import fr.enac.smartdring.fragments.profiles.ProfilesList;
 import fr.enac.smartdring.modele.MyData;
 import fr.enac.smartdring.modele.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
@@ -51,7 +55,9 @@ public class ParamRegles extends Activity {
     /* -- Les paramètres de la règle -- */
     private EnumTypeRegle typeRegle = EnumTypeRegle.Ecouteurs_Connectes;
     private Profil profilActivation;
+    private Menu m;
     /* -- -- */
+
 
     /* -- Interactions avec le service -- */
     private MyService mService;
@@ -145,19 +151,24 @@ public class ParamRegles extends Activity {
 
 
         /* ---- On paramètre les spinners ---- */
-        final ArrayList<EnumTypeRegle> LISTE = new ArrayList<EnumTypeRegle>();
+        final ArrayList<String> LISTE = new ArrayList<String>();
+        final ArrayList<String> LISTE2 = new ArrayList<String>();
+        final ArrayList<Integer> LISTEIco = new ArrayList<Integer>();
+        final ArrayList<Integer> LISTEIco2 = new ArrayList<Integer>();
         for (EnumTypeRegle el : EnumTypeRegle.values()) {
-            LISTE.add(el);
+            LISTE.add(el.toString());
+            LISTEIco.add(el.getIconeId());
         }
-        ArrayAdapter<EnumTypeRegle> adapter = new ArrayAdapter<EnumTypeRegle>(this, android.R.layout.simple_spinner_item, LISTE);
+        ProfilesList adapter = new ProfilesList(this, LISTE, LISTEIco);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ruleType.setAdapter(adapter);
 
-        final ArrayList<String> LISTE2 = new ArrayList<String>();
+
         for (Profil p : MyData.appelData().getListeProfils()) {
             LISTE2.add(p.getName());
+            LISTEIco2.add(p.getIconeId());
         }
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, LISTE2);
+        ProfilesList adapter2 = new ProfilesList(this, LISTE2, LISTEIco2);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ruleProfile.setAdapter(adapter2);
 
@@ -245,6 +256,34 @@ public class ParamRegles extends Activity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
+        // Gestion du controle du nom de la règle, on empeche de sauvegarder en cas de doublon de noms :
+        ruleName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String s = editable.toString();
+                boolean doublon = false;
+
+                if (s.equals("")){
+                    doublon = true;
+                }
+                else {
+                    for (Rule r : MyData.appelData().getListeRegles()) {
+                        if (r.getRuleName().equals(s)) {
+                            doublon = true;
+                        }
+                    }
+                }
+
+                setSavePossible (doublon);
+            }
+        });
         /* ---- ---- */
 
         // On adapte la vue à la situation :
@@ -276,6 +315,10 @@ public class ParamRegles extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.param_profile_regle, menu);
+        m = menu;
+        if (MyData.appelData().isCreateRegle()) {
+            m.findItem(R.id.save).setVisible(false);
+        }
         return true;
     }
 
@@ -287,22 +330,22 @@ public class ParamRegles extends Activity {
             switch (typeRegle) {
                 case Ecouteurs_Connectes:
                     r = new AudioPeriphRule(ruleName.getText().toString(), profilActivation,
-                            R.drawable.ic_ecouteur);
+                            typeRegle.getIconeId());
                     break;
                 case Telephone_Retourne:
-                    r = new RetournementRule(ruleName.getText().toString(), profilActivation, 0);
+                    r = new RetournementRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId());
                     break;
                 case Heure_Atteinte:
                     GregorianCalendar c = new GregorianCalendar(year, month, day, hour, minute);
-                    r = new TimerRule(ruleName.getText().toString(), profilActivation, 0, c);
+                    r = new TimerRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), c);
                     break;
                 case Geolocalisation:
                     break;
                 case Something_Close:
-                    r = new ProximityRule(ruleName.getText().toString(), profilActivation, 0);
+                    r = new ProximityRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId());
                     break;
                 case Secouer:
-                    r = new ShakeRule(ruleName.getText().toString(), profilActivation, 0);
+                    r = new ShakeRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId());
                     break;
             }
             if (MyData.appelData().isCreateRegle()) {
@@ -439,6 +482,11 @@ public class ParamRegles extends Activity {
             month = m;
             day = d;
         }
+    }
+
+    private void setSavePossible (boolean doublon){
+        m.findItem(R.id.save).setVisible(!doublon);
+        ruleName.setTextColor(doublon ? Color.RED : Color.BLACK);
     }
 
 }
