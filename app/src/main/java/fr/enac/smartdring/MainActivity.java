@@ -10,13 +10,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 import fr.enac.smartdring.fragments.profiles.ParamProfile;
 import fr.enac.smartdring.fragments.regles.ParamRules;
+import fr.enac.smartdring.modele.DataSaver;
 import fr.enac.smartdring.modele.MyData;
 
 
@@ -24,13 +23,14 @@ import fr.enac.smartdring.modele.MyData;
  * Cette classe est une activite qui met en place la navigation entre les differentes pages du formulaire.
  * A la creation de l'activite le systeme d'onglet est mis en place ainsi que le swipe entre les pages.
  * On insert egalement les pages du formulaire dans les onglets.
+ *
  * @author Pierre Chevalier
  * @version 1.0
  */
 public class MainActivity extends FragmentActivity implements TabListener {
 
 	/*
-	 * Cette classe comprend des methodes permettant de gerer les actions faites par l'utilisateur dans l'ActionBar, 
+     * Cette classe comprend des methodes permettant de gerer les actions faites par l'utilisateur dans l'ActionBar,
 	 * ainsi que le changement d'onglets.
 	 */
 
@@ -38,17 +38,17 @@ public class MainActivity extends FragmentActivity implements TabListener {
     private ViewPager viewPager = null;
     private ActionBar actionBar = null;
     /* ---- ---- */
-	/* ---- Attributs du modele : ---- */
+	/* ---- Attributs pour le modele : ---- */
     private static int ongletSelect;
 	/* ---- ---- */
-
 
 
     /**
      * Cette methode est la premiere a etre appeler au commencement de l'application et ce, de facon automatique.
      * Elle permet la mise en place du Navigation Drawer, des onglets, ainsi que de l'ActionBar
+     *
      * @param arg0 si l'activite est reinitialisee juste apres avoir ete arretee, il contient les donnees
-     * les plus recemment entrees
+     *             les plus recemment entrees
      */
     @Override
     protected void onCreate(Bundle arg0) {
@@ -56,7 +56,11 @@ public class MainActivity extends FragmentActivity implements TabListener {
         setContentView(R.layout.activity_main);
         int tmp = ongletSelect;
 
-        // endroit où mettre le chargement des donnees
+        // chargement des donnees vers MyData
+        if (MyData.appelData().getListeProfils().isEmpty()) {
+            DataSaver.appelDataSaver(this).openFiles();
+            DataSaver.appelDataSaver(this).getData();
+        }
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         actionBar = getActionBar();
@@ -69,25 +73,33 @@ public class MainActivity extends FragmentActivity implements TabListener {
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
-            public void onPageScrollStateChanged(int arg0) {}
+            public void onPageScrollStateChanged(int arg0) {
+            }
 
             @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {}
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
 
             @Override
             public void onPageSelected(int arg0) {
                 actionBar.setSelectedNavigationItem(arg0);
 
             }
-
         });
     }
 
-
+    /**
+     * Méthode sauvegardant les données dans un fichier
+     */
+    protected void onDestroy() {
+        DataSaver.appelDataSaver(this).overwriteDataOnFiles();
+        super.onDestroy();
+    }
 
     /**
      * Cette methode initialise le menu lie a l'ActionBar apres que la methode onCreate() ait ete appelee. Elle est
      * appelee automatiquement par le systeme.
+     *
      * @param menu, le menu dans lequel on souhaite mettre les items
      * @see <a href="http://developer.android.com/reference/android/app/Activity.html#onCreateOptionsMenu%28android.view.Menu%29">onCreateOptionsMenu</a>
      */
@@ -98,10 +110,9 @@ public class MainActivity extends FragmentActivity implements TabListener {
         return true;
     }
 
-
-
     /**
      * Place les fragments (pages du formulaire) dans les onglets de l'action bar.
+     *
      * @param actionBar L'action bar de l'application Android.
      */
     private void addTabs(ActionBar actionBar) {
@@ -117,11 +128,10 @@ public class MainActivity extends FragmentActivity implements TabListener {
         actionBar.addTab(regles);
     }
 
-
-
     /**
      * Cette methode est une methode appelee automatiquement par le systeme quand l'utilisateur appuie sur une des icones
      * de l'action bar.
+     *
      * @see <a href="http://developer.android.com/reference/android/app/Activity.html#onOptionsItemSelected%28android.view.MenuItem%29">onOptionsItemSelected</a>
      */
     @Override
@@ -159,7 +169,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
                             }
                         });
                 alertDialog.show();
-            } else if (id == R.id.help){
+            } else if (id == R.id.help) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
                 alertDialog.setTitle("PAGE DES PROFILS");
                 alertDialog.setMessage("Blabla");
@@ -172,8 +182,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
                         });
                 alertDialog.show();
             }
-        }
-        else { // Si on est sur la page des règles.
+        } else { // Si on est sur la page des règles.
             if (id == R.id.edit) {
                 MyData.appelData().setCreateRegle(false);
                 Intent intent = new Intent(this, ParamRules.class);
@@ -192,7 +201,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
                 alertDialog.setPositiveButton("OUI",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                MyData.appelData().getListeRegles().remove(MyData.appelData().getRegleSelectedNum());
+                                MyData.appelData().getListeRules().remove(MyData.appelData().getRegleSelectedNum());
                             }
                         });
                 alertDialog.setNegativeButton("ANNULER",
@@ -209,11 +218,12 @@ public class MainActivity extends FragmentActivity implements TabListener {
     }
 
     @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+    }
 
     @Override
-    public void onTabReselected(Tab tab, FragmentTransaction ft) {}
-
+    public void onTabReselected(Tab tab, FragmentTransaction ft) {
+    }
 
 
     /**

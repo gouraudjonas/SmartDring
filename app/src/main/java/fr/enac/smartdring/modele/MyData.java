@@ -16,7 +16,9 @@ import fr.enac.smartdring.fragments.profiles.ProfilesList;
 import fr.enac.smartdring.modele.regles.Rule;
 
 /**
- * Cette classe permet le partage de données entre les différents fragments. Il s'agit d'une classe singleton.
+ * Cette classe permet le partage de données entre les différents fragments. Il s'agit d'une
+ * classe singleton.
+ *
  * Created by chevalier on 02/10/14.
  */
 public class MyData {
@@ -27,13 +29,14 @@ public class MyData {
     private int activeProfilNum = -1;
     private int ProfilSelectedNum;
     private boolean createProfil;
-    private static ArrayList<Rule> listeRegles;
+    private static ArrayList<Rule> listeRules;
     private int RegleSelectedNum;
     private boolean createRegle;
+    private DataSaver myDataSaver;
 
 
     /**
-     * Construsteur de la classe MyData, vide par defaut.
+     * Construscteur de la classe MyData, vide par defaut.
      * Il est mis en private car il s'agit d'un pattern singleton
      */
     private MyData (){}
@@ -46,7 +49,7 @@ public class MyData {
     public static MyData appelData (){
         if (instance == null){
             listeProfils = new ArrayList<Profil>();
-            listeRegles = new ArrayList<Rule>();
+            listeRules = new ArrayList<Rule>();
             instance = new MyData ();
         }
         return instance;
@@ -69,8 +72,20 @@ public class MyData {
         this.listeProfils = listeProfils;
     }
 
-    public ArrayList<Rule> getListeRegles() {
-        return listeRegles;
+    public ArrayList<Rule> getListeRules() {
+        return listeRules;
+    }
+
+    public void setListeRules(ArrayList<Rule> listeRules) {
+        this.listeRules = listeRules;
+    }
+
+    public Profil getProfilByName(String name){
+        for (Profil profil : listeProfils){
+            if (profil.getName().equals(name))
+                return profil;
+        }
+        return null;
     }
 
     public int getProfilSelectedNum() {

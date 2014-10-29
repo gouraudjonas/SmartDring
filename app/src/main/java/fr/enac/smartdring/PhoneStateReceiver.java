@@ -12,10 +12,6 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        /*MyPhoneStateListener phoneListener = new MyPhoneStateListener();
-        TelephonyManager telephony = (TelephonyManager)
-                context.getSystemService(Context.TELEPHONY_SERVICE);
-        telephony.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);*/
 
         if (intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)) {
             // This code will execute when the phone has an incoming call

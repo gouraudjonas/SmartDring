@@ -2,7 +2,6 @@ package fr.enac.smartdring.modele.regles;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 
 import fr.enac.smartdring.modele.Profil;
@@ -19,24 +18,50 @@ public abstract class Rule extends BroadcastReceiver {
      * La règle est autorisée à s'activer si ce paramètre est à true.
      */
     protected boolean activationAllowed;
+
     /**
      * L'état d'activation de la règle.
      */
-    protected boolean actived;
-
+    protected boolean active;
 
     /**
      * Constructeur d'une règle liée au périphérique audio de sortie.
-     * @param ruleName Le nom de la règle.
+     *
+     * @param ruleName   Le nom de la règle.
      * @param ruleProfil Le profil à activer si la règle est vérifiée.
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
-    public Rule (String ruleName, Profil ruleProfil, Integer ruleIconId){
+    public Rule(String ruleName, Profil ruleProfil, Integer ruleIconId) {
         this.ruleProfil = ruleProfil;
         this.ruleName = ruleName;
         this.ruleIcone = ruleIconId;
         this.activationAllowed = true;
-        this.actived = false;
+        this.active = false;
+    }
+
+    /**
+     * Constructeur d'une règle liée au périphérique audio de sortie. Ce constructeur sert à
+     * DataSaver.
+     *
+     * @param ruleName   Le nom de la règle.
+     * @param ruleProfil Le profil à activer si la règle est vérifiée.
+     * @param ruleIconId L'identifiant de l'icone associée à la règle.
+     */
+    public Rule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
+                int isActive) {
+        this.ruleProfil = ruleProfil;
+        this.ruleName = ruleName;
+        this.ruleIcone = ruleIconId;
+
+        if (activationAllowed == 1)
+            this.activationAllowed = true;
+        else
+            this.activationAllowed = false;
+
+        if (isActive == 1)
+            this.active = true;
+        else
+            this.active = false;
     }
 
 
@@ -61,25 +86,25 @@ public abstract class Rule extends BroadcastReceiver {
         this.ruleIcone = id;
     }
 
-    public int getRuleIcon(){
+    public int getRuleIcon() {
         return this.ruleIcone;
     }
 
-    public void setActivationAllow(boolean canActive) {
+    public void setActivationAllowed(boolean canActive) {
         this.activationAllowed = canActive;
     }
 
-    public boolean getActivationAllow() {
+    public boolean isActivationAllowed() {
         return this.activationAllowed;
     }
 
     public boolean isActive() {
-        return this.actived;
+        return this.active;
     }
     /* ---- ---- */
 
 
-    protected void activationProfil (Profil p, Context ctx){
+    protected void activationProfil(Profil p, Context ctx) {
         AudioManager audio = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         audio.setStreamVolume(audio.STREAM_SYSTEM, p.getStreamSystemValue(), 0);
         audio.setStreamVolume(audio.STREAM_RING, p.getStreamRingValue(), 0);

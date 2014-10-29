@@ -11,22 +11,40 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import fr.enac.smartdring.modele.regles.AudioPeriphRule;
+import fr.enac.smartdring.modele.regles.FlippingRule;
+import fr.enac.smartdring.modele.regles.ProximityRule;
+import fr.enac.smartdring.modele.regles.Rule;
+import fr.enac.smartdring.modele.regles.ShakeRule;
+import fr.enac.smartdring.modele.regles.TimerRule;
+
 /**
+ * Classe permettant de lire et d'écrire les données (profils et regles) dans des fichiers.
+ * De même que MyData, cette classe suit le pattern singleton.
+ * <p/>
  * Created by Jonas on 15/10/2014.
  */
 public class DataSaver {
 
-    private Context context;
-    private File fileProfils;
-    private File fileRegles;
-    private File fileActions;
+    private static Context context;
+    private static File fileProfils;
+    private static File fileRules;
 
-    private MyData dataCollection;
+    private static DataSaver instance;
 
-    public DataSaver(Context context) {
-        this.context = context;
+    /**
+     * Constructeur mis private pour éviter son utilisation, conformément aux directives du
+     * pattern singleton.
+     */
+    private DataSaver() {
+    }
 
-        dataCollection = MyData.appelData();
+    public static DataSaver appelDataSaver(Context newContext) {
+        if (instance == null) {
+            context = newContext;
+            instance = new DataSaver();
+        }
+        return instance;
     }
 
     /**
@@ -34,8 +52,7 @@ public class DataSaver {
      */
     public void openFiles() {
         fileProfils = openFile("Profils.txt");
-        fileRegles = openFile("Regles.txt");
-        fileActions = openFile("Actions.txt");
+        fileRules = openFile("Rules.txt");
     }
 
     /**
@@ -53,6 +70,7 @@ public class DataSaver {
             }
         } catch (IOException e) {
             Log.e("DataSaver", "Unable to create the file " + fileName);
+            e.printStackTrace();
         }
 
         return dataFile;
@@ -63,14 +81,14 @@ public class DataSaver {
      */
     public void getData() {
 
+        // On traite les profils
         try {
-            // On traite les profils
             ArrayList<Profil> listProfils = new ArrayList<Profil>();
 
             // Lit le fichier et met les infos dans une structure
             BufferedReader reader = new BufferedReader(new FileReader(fileProfils));
             String line;
-            while ((line = reader.readLine()) == null) {
+            while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\s");
 
                 // Recuperation des informations selon le format definit par la classe Profil
@@ -82,6 +100,7 @@ public class DataSaver {
                             Integer.parseInt(parts[8])));
                 } catch (NumberFormatException e) {
                     Log.e("DataSaver", "Probleme de recreation des profils");
+                    e.printStackTrace();
                 }
             }
             MyData.appelData().setListeProfils(listProfils);
@@ -90,6 +109,64 @@ public class DataSaver {
 
         } catch (IOException e) {
             Log.e("DataSaver", "impossible de lire le fichier Profils.txt");
+            e.printStackTrace();
+        }
+
+        // On traite les regles
+        try {
+            ArrayList<Rule> listRules = new ArrayList<Rule>();
+
+            // Lit le fichier et met les infos dans une structure
+            BufferedReader reader = new BufferedReader(new FileReader(fileRules));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\s");
+
+                // Recuperation des informations selon le format definit par la classe Profil
+                try {
+                    Profil myProfil = MyData.appelData().getProfilByName(parts[2]);
+
+                    // convention pour le type de regle : 0 -> AudioPeriphRule ; 1 -> FlippingRule ;
+                    // 2 -> ProximityRule ; 3 -> ShakeRule ; 4 -> TimerRule
+                    switch (Integer.parseInt(parts[0])) {
+                        case 0:
+                            listRules.add(new AudioPeriphRule(parts[1],
+                                    myProfil, Integer.parseInt(parts[3]),
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                            break;
+                        case 1:
+                            listRules.add(new FlippingRule(parts[1],
+                                    myProfil, Integer.parseInt(parts[3]),
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                            break;
+                        case 2:
+                            listRules.add(new ProximityRule(parts[1],
+                                    myProfil, Integer.parseInt(parts[3]),
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                            break;
+                        case 3:
+                            listRules.add(new ShakeRule(parts[1],
+                                    myProfil, Integer.parseInt(parts[3]),
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                            break;
+                        case 4:
+                            listRules.add(new TimerRule(parts[1],
+                                    myProfil, Integer.parseInt(parts[3]),
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                            break;
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e("DataSaver", "Probleme de recreation des regles");
+                    e.printStackTrace();
+                }
+            }
+            MyData.appelData().setListeRules(listRules);
+
+            reader.close();
+
+        } catch (IOException e) {
+            Log.e("DataSaver", "impossible de lire le fichier Rules.txt");
+            e.printStackTrace();
         }
     }
 
@@ -99,7 +176,9 @@ public class DataSaver {
     public void overwriteDataOnFiles() {
         int i;
         Profil myProfil;
+        Rule myRule;
 
+        // on sauvegarde les données des profils
         try {
             fileProfils.delete();
             fileProfils.createNewFile();
@@ -130,6 +209,57 @@ public class DataSaver {
             }
         } catch (IOException e) {
             Log.e("DataSaver", "Impossible de recreer le fichier Profils.txt");
+            e.printStackTrace();
+        }
+
+        // on sauvegarde les données des regles
+        try {
+            fileRules.delete();
+            fileRules.createNewFile();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileRules, true));
+
+            for (i = 0; i < MyData.appelData().getListeRules().size(); i++) {
+                myRule = MyData.appelData().getListeRules().get(i);
+
+                // sauvegarde du type de la regle
+                // convention pour le type de regle : 0 -> AudioPeriphRule ; 1 -> FlippingRule ;
+                // 2 -> ProximityRule ; 3 -> ShakeRule ; 4 -> TimerRule
+                if (myRule instanceof AudioPeriphRule)
+                    writer.write("0");
+                if (myRule instanceof FlippingRule)
+                    writer.write("1");
+                if (myRule instanceof ProximityRule)
+                    writer.write("2");
+                if (myRule instanceof ShakeRule)
+                    writer.write("3");
+                if (myRule instanceof TimerRule)
+                    writer.write("4");
+
+                // sauvegarde du reste des donnees de la regle
+                writer.write(" " + myRule.getRuleName());
+                writer.write(" " + myRule.getRuleProfil().getName());
+                writer.write(" " + myRule.getRuleIcon());
+                
+                if (myRule.isActivationAllowed())
+                    writer.write(" 1");
+                else
+                    writer.write(" 0");
+
+                if (myRule.isActive())
+                    writer.write(" 1");
+                else
+                    writer.write(" 0");
+
+                // S'il s'agit du dernier profil, on ne met pas de nouvelle ligne apres
+                if (!(i == MyData.appelData().getListeProfils().size() - 1))
+                    writer.newLine();
+
+                writer.close();
+            }
+        } catch (IOException e) {
+            Log.e("DataSaver", "Impossible de recreer le fichier Rules.txt");
+            e.printStackTrace();
         }
     }
 }

@@ -27,6 +27,20 @@ public class FlippingRule extends Rule implements SensorEventListener {
 
 
     /**
+     * Constructeur d'une règle liée au périphérique audio de sortie. Ce constructeur sert à
+     * DataSaver.
+     *
+     * @param ruleName Le nom de la règle.
+     * @param ruleProfil Le profil à activer si la règle est vérifiée.
+     * @param ruleIconId L'identifiant de l'icone associée à la règle.
+     */
+    public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
+                           int isActive){
+        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive);
+    }
+
+
+    /**
      * ATTENTION : Méthode devant etre appelé par le service avant abonnement.
      * @param ctx Le contexte du service.
      */
@@ -45,9 +59,9 @@ public class FlippingRule extends Rule implements SensorEventListener {
                 if (Math.abs(pitch_angle) >= 135) {
                     activationProfil(this.getRuleProfil(), context);
                     estRetourne = true;
-                    this.actived = true;
+                    this.active = true;
                 } else if (Math.abs(pitch_angle) < 90 && estRetourne) {
-                    this.actived = false;
+                    this.active = false;
                     estRetourne = false;
                 }
             }

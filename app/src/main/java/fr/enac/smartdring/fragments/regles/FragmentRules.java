@@ -61,36 +61,36 @@ public class FragmentRules extends android.support.v4.app.Fragment {
         ArrayList<String> nom = new ArrayList<String>();
         ArrayList<Integer> icones = new ArrayList<Integer>();
         for (EnumTypeRule el : EnumTypeRule.values()) {
-            for (int i = 0; i < MyData.appelData().getListeRegles().size(); i++) {
+            for (int i = 0; i < MyData.appelData().getListeRules().size(); i++) {
                 switch (el){
                     case Ecouteurs_Connectes:
-                        if (MyData.appelData().getListeRegles().get(i) instanceof AudioPeriphRule) {
-                            nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
-                            icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
+                        if (MyData.appelData().getListeRules().get(i) instanceof AudioPeriphRule) {
+                            nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
+                            icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Heure_Atteinte:
-                        if (MyData.appelData().getListeRegles().get(i) instanceof TimerRule) {
-                            nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
-                            icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
+                        if (MyData.appelData().getListeRules().get(i) instanceof TimerRule) {
+                            nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
+                            icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Telephone_Retourne:
-                        if (MyData.appelData().getListeRegles().get(i) instanceof FlippingRule) {
-                            nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
-                            icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
+                        if (MyData.appelData().getListeRules().get(i) instanceof FlippingRule) {
+                            nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
+                            icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Something_Close:
-                        if (MyData.appelData().getListeRegles().get(i) instanceof ProximityRule) {
-                            nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
-                            icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
+                        if (MyData.appelData().getListeRules().get(i) instanceof ProximityRule) {
+                            nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
+                            icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Secouer:
-                        if (MyData.appelData().getListeRegles().get(i) instanceof ShakeRule) {
-                            nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
-                            icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
+                        if (MyData.appelData().getListeRules().get(i) instanceof ShakeRule) {
+                            nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
+                            icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Geolocalisation:
@@ -101,10 +101,10 @@ public class FragmentRules extends android.support.v4.app.Fragment {
         }
 
 
-        String nameTab [] = new String[MyData.appelData().getListeRegles().size()];
-        Integer iconeTab [] = new Integer[MyData.appelData().getListeRegles().size()];
+        String nameTab [] = new String[MyData.appelData().getListeRules().size()];
+        Integer iconeTab [] = new Integer[MyData.appelData().getListeRules().size()];
 
-        for (int i = 0 ; i < MyData.appelData().getListeRegles().size() ; i++){
+        for (int i = 0 ; i < MyData.appelData().getListeRules().size() ; i++){
             nameTab [i] = nom.get(i);
             iconeTab [i] = icones.get(i);
         }

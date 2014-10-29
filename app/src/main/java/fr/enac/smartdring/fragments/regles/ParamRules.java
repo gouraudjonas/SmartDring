@@ -173,8 +173,8 @@ public class ParamRules extends Activity {
         ruleProfile.setAdapter(adapter2);
 
         if (!MyData.appelData().isCreateRegle()) {
-            ruleName.setText(MyData.appelData().getListeRegles().get(MyData.appelData().getRegleSelectedNum()).getRuleName());
-            Rule r = MyData.appelData().getListeRegles().get(MyData.appelData().getRegleSelectedNum());
+            ruleName.setText(MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum()).getRuleName());
+            Rule r = MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum());
             switch (EnumTypeRule.toEnumTypeRule(r)) {
 
                 // truc bizarre : normalement heure_atteinte et telephone_retourne devraient etre
@@ -274,7 +274,7 @@ public class ParamRules extends Activity {
                     doublon = true;
                 }
                 else {
-                    for (Rule r : MyData.appelData().getListeRegles()) {
+                    for (Rule r : MyData.appelData().getListeRules()) {
                         if (r.getRuleName().equals(s)) {
                             doublon = true;
                         }
@@ -349,12 +349,12 @@ public class ParamRules extends Activity {
                     break;
             }
             if (MyData.appelData().isCreateRegle()) {
-                MyData.appelData().getListeRegles().add(r);
+                MyData.appelData().getListeRules().add(r);
                 if (this.mBound) {
                     mService.abonnerRegle(r);
                 }
             } else {
-                MyData.appelData().getListeRegles().set(MyData.appelData().getRegleSelectedNum(), r);
+                MyData.appelData().getListeRules().set(MyData.appelData().getRegleSelectedNum(), r);
             }
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

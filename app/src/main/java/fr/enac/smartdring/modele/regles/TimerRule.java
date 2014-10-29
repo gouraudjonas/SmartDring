@@ -26,6 +26,18 @@ public class TimerRule extends Rule {
         this.ruleCondition = ruleCondition;
     }
 
+    /**
+     * Constructeur d'une règle liée au périphérique audio de sortie. Ce constructeur sert à
+     * DataSaver.
+     *
+     * @param ruleName Le nom de la règle.
+     * @param ruleProfil Le profil à activer si la règle est vérifiée.
+     * @param ruleIconId L'identifiant de l'icone associée à la règle.
+     */
+    public TimerRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
+                           int isActive){
+        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive);
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {

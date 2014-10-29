@@ -2,6 +2,8 @@ package fr.enac.smartdring.modele.regles;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+
 import fr.enac.smartdring.modele.Profil;
 
 /**
@@ -20,6 +22,18 @@ public class AudioPeriphRule extends Rule {
        super (ruleName, ruleProfil, ruleIconId);
     }
 
+    /**
+     * Constructeur d'une règle liée au périphérique audio de sortie. Ce constructeur sert à
+     * DataSaver.
+     *
+     * @param ruleName Le nom de la règle.
+     * @param ruleProfil Le profil à activer si la règle est vérifiée.
+     * @param ruleIconId L'identifiant de l'icone associée à la règle.
+     */
+    public AudioPeriphRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
+                 int isActive){
+        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive);
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -29,11 +43,11 @@ public class AudioPeriphRule extends Rule {
                 switch (state) {
                     case 0:
                         //  Log.d(TAG, "Headset is unplugged");
-                        this.actived = false;
+                        this.active = false;
                         break;
                     case 1:
                         activationProfil(this.getRuleProfil(), context);
-                        this.actived = true;
+                        this.active = true;
                         break;
                 }
             }

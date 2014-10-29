@@ -31,6 +31,19 @@ public class ProximityRule extends Rule implements SensorEventListener {
     }
 
     /**
+     * Constructeur d'une règle liée au périphérique audio de sortie. Ce constructeur sert à
+     * DataSaver.
+     *
+     * @param ruleName Le nom de la règle.
+     * @param ruleProfil Le profil à activer si la règle est vérifiée.
+     * @param ruleIconId L'identifiant de l'icone associée à la règle.
+     */
+    public ProximityRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
+                           int isActive){
+        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive);
+    }
+
+    /**
      * ATTENTION : Méthode devant etre appelé par le service avant abonnement.
      * @param ctx Le contexte du service.
      */
@@ -48,9 +61,9 @@ public class ProximityRule extends Rule implements SensorEventListener {
                 if (distance == 0) {
                     activationProfil(this.getRuleProfil(), context);
                     somethingClose = true;
-                    this.actived = true;
+                    this.active = true;
                 } else {
-                    this.actived = false;
+                    this.active = false;
                     somethingClose = false;
                 }
             }
