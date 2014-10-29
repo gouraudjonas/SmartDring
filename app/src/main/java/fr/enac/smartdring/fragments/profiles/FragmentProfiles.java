@@ -9,11 +9,8 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.renderscript.Float3;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -22,10 +19,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import fr.enac.smartdring.Etat;
+import fr.enac.smartdring.State;
 import fr.enac.smartdring.MyMap;
 import fr.enac.smartdring.R;
-import fr.enac.smartdring.fragments.regles.ParamRegles;
 import fr.enac.smartdring.modele.MyData;
 import fr.enac.smartdring.modele.Profil;
 
@@ -38,7 +34,7 @@ import fr.enac.smartdring.modele.Profil;
 public class FragmentProfiles extends Fragment {
     private View vProfils;
     private ListView list;
-    private Etat etat;
+    private State etat;
     private Button map;
 
     /**
@@ -51,7 +47,7 @@ public class FragmentProfiles extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        etat = Etat.NO_SELECTION;
+        etat = State.NO_SELECTION;
         this.manageActionBar();
 
 		/* ---- Recuperation des fragments dans les fichiers xml ---- */
@@ -75,7 +71,7 @@ public class FragmentProfiles extends Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                etat = Etat.NO_SELECTION;
+                etat = State.NO_SELECTION;
                 MyData.appelData().setActiveProfil(position);
                 activationProfil(MyData.appelData().getListeProfils().get(position));
                 for (int i = 0; i < parent.getCount(); i++) {
@@ -89,7 +85,7 @@ public class FragmentProfiles extends Fragment {
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int i, long l) {
-                etat = Etat.PROFILE_SELECTION;
+                etat = State.PROFILE_SELECTION;
                 Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
                 if (v.hasVibrator()) {
                     v.vibrate(25);

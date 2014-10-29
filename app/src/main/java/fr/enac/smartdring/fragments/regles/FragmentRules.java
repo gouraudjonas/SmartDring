@@ -1,35 +1,22 @@
 package fr.enac.smartdring.fragments.regles;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import fr.enac.smartdring.Etat;
-import fr.enac.smartdring.MainActivity;
-import fr.enac.smartdring.MyMap;
+import fr.enac.smartdring.State;
 import fr.enac.smartdring.R;
 import fr.enac.smartdring.fragments.profiles.ProfilesList;
 import fr.enac.smartdring.modele.MyData;
-import fr.enac.smartdring.modele.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
+import fr.enac.smartdring.modele.regles.FlippingRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
-import fr.enac.smartdring.modele.regles.RetournementRule;
 import fr.enac.smartdring.modele.regles.ShakeRule;
 import fr.enac.smartdring.modele.regles.TimerRule;
 
@@ -37,24 +24,24 @@ import fr.enac.smartdring.modele.regles.TimerRule;
 /**
  * Cette classe gère le fragment affichant l'ensemble des règles :
  */
-public class FragmentRegles extends android.support.v4.app.Fragment {
+public class FragmentRules extends android.support.v4.app.Fragment {
     private View vRegles;
     private ListView listRules;
-    private Etat etat;
+    private State etat;
 
 
     /**
      * Constructeur associe a la classe.
      * Il est vide par defaut.
      */
-    public FragmentRegles() {
+    public FragmentRules() {
         // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        etat = Etat.NO_SELECTION;
+        etat = State.NO_SELECTION;
         this.manageActionBar();
 
 		/* ---- Recuperation des fragments dans les fichiers xml ---- */
@@ -64,7 +51,7 @@ public class FragmentRegles extends android.support.v4.app.Fragment {
         vRegles.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                etat = Etat.NO_SELECTION;
+                etat = State.NO_SELECTION;
                 manageActionBar();
             }
         });
@@ -73,7 +60,7 @@ public class FragmentRegles extends android.support.v4.app.Fragment {
         /* ---- Affichage de la liste des profils ---- */
         ArrayList<String> nom = new ArrayList<String>();
         ArrayList<Integer> icones = new ArrayList<Integer>();
-        for (EnumTypeRegle el : EnumTypeRegle.values()) {
+        for (EnumTypeRule el : EnumTypeRule.values()) {
             for (int i = 0; i < MyData.appelData().getListeRegles().size(); i++) {
                 switch (el){
                     case Ecouteurs_Connectes:
@@ -89,7 +76,7 @@ public class FragmentRegles extends android.support.v4.app.Fragment {
                         }
                         break;
                     case Telephone_Retourne:
-                        if (MyData.appelData().getListeRegles().get(i) instanceof RetournementRule) {
+                        if (MyData.appelData().getListeRegles().get(i) instanceof FlippingRule) {
                             nom.add(MyData.appelData().getListeRegles().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRegles().get(i).getRuleProfil().getName());
                             icones.add(MyData.appelData().getListeRegles().get(i).getRuleIcon());
                         }

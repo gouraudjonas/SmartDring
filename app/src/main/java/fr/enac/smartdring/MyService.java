@@ -11,8 +11,8 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
+import fr.enac.smartdring.modele.regles.FlippingRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
-import fr.enac.smartdring.modele.regles.RetournementRule;
 import fr.enac.smartdring.modele.regles.Rule;
 import fr.enac.smartdring.modele.regles.ShakeRule;
 import fr.enac.smartdring.modele.regles.TimerRule;
@@ -24,8 +24,6 @@ public class MyService extends Service {
     private Sensor mSensorOrientation;
     private Sensor mSensorProximity;
     private Sensor mSensorAccel;
-    private boolean estRetourne = false;
-    private AudioPeriphRule test;
 
     private PhoneStateReceiver mPhoneStateReceiver;
     static private boolean incomingCall = false;
@@ -73,8 +71,8 @@ public class MyService extends Service {
         if (r instanceof TimerRule){
             registerReceiver(r, new IntentFilter(Intent.ACTION_TIME_TICK));
         }
-        if (r instanceof RetournementRule){
-            ((RetournementRule) r).serviceSetContext(this.getBaseContext());
+        if (r instanceof FlippingRule){
+            ((FlippingRule) r).serviceSetContext(this.getBaseContext());
             mSensorManager.registerListener((SensorEventListener) r, mSensorOrientation,
                     SensorManager.SENSOR_DELAY_NORMAL);
         }
@@ -101,7 +99,7 @@ public class MyService extends Service {
         if (r instanceof TimerRule){
             unregisterReceiver(r);
         }
-        if (r instanceof RetournementRule){
+        if (r instanceof FlippingRule){
             mSensorManager.unregisterListener((SensorEventListener) r, mSensorOrientation);
         }
         if (r instanceof ProximityRule){

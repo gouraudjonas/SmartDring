@@ -13,7 +13,7 @@ import fr.enac.smartdring.modele.Profil;
  * Cette classe gère le contexte "le téléphone est face contre le mur".
  * Created by chevalier on 15/10/14.
  */
-public class RetournementRule extends Rule implements SensorEventListener {
+public class FlippingRule extends Rule implements SensorEventListener {
     /**
      * Vaut true si le téléphone est face contre le sol, false sinon.
      */
@@ -21,7 +21,7 @@ public class RetournementRule extends Rule implements SensorEventListener {
     private Context context;
 
 
-    public RetournementRule (String ruleName, Profil ruleProfil, Integer ruleIconId){
+    public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId){
         super(ruleName, ruleProfil, ruleIconId);
     }
 

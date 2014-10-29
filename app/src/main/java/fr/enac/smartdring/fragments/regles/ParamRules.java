@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -41,8 +40,8 @@ import fr.enac.smartdring.fragments.profiles.ProfilesList;
 import fr.enac.smartdring.modele.MyData;
 import fr.enac.smartdring.modele.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
+import fr.enac.smartdring.modele.regles.FlippingRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
-import fr.enac.smartdring.modele.regles.RetournementRule;
 import fr.enac.smartdring.modele.regles.Rule;
 import fr.enac.smartdring.modele.regles.ShakeRule;
 import fr.enac.smartdring.modele.regles.TimerRule;
@@ -50,10 +49,10 @@ import fr.enac.smartdring.modele.regles.TimerRule;
 /**
  * Cette classe permet à l'utilisateur de rentrer une règle de gestion automatique des profils.
  */
-public class ParamRegles extends Activity {
+public class ParamRules extends Activity {
 
     /* -- Les paramètres de la règle -- */
-    private EnumTypeRegle typeRegle = EnumTypeRegle.Ecouteurs_Connectes;
+    private EnumTypeRule typeRegle = EnumTypeRule.Ecouteurs_Connectes;
     private Profil profilActivation;
     private Menu m;
     /* -- -- */
@@ -71,13 +70,13 @@ public class ParamRegles extends Activity {
             MyService.ServiceInterface binder = (MyService.ServiceInterface) service;
             mService = binder.getService();
             mBound = true;
-            Toast.makeText(ParamRegles.this, "CONNECT", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ParamRules.this, "CONNECT", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
-            Toast.makeText(ParamRegles.this, "DECONNECT", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ParamRules.this, "DECONNECT", Toast.LENGTH_SHORT).show();
         }
     };
     /* -- -- */
@@ -151,11 +150,12 @@ public class ParamRegles extends Activity {
 
 
         /* ---- On paramètre les spinners ---- */
+
         final ArrayList<String> LISTE = new ArrayList<String>();
         final ArrayList<String> LISTE2 = new ArrayList<String>();
         final ArrayList<Integer> LISTEIco = new ArrayList<Integer>();
         final ArrayList<Integer> LISTEIco2 = new ArrayList<Integer>();
-        for (EnumTypeRegle el : EnumTypeRegle.values()) {
+        for (EnumTypeRule el : EnumTypeRule.values()) {
             LISTE.add(el.toString());
             LISTEIco.add(el.getIconeId());
         }
@@ -175,7 +175,7 @@ public class ParamRegles extends Activity {
         if (!MyData.appelData().isCreateRegle()) {
             ruleName.setText(MyData.appelData().getListeRegles().get(MyData.appelData().getRegleSelectedNum()).getRuleName());
             Rule r = MyData.appelData().getListeRegles().get(MyData.appelData().getRegleSelectedNum());
-            switch (EnumTypeRegle.toEnumTypeRegle(r)) {
+            switch (EnumTypeRule.toEnumTypeRule(r)) {
 
                 // truc bizarre : normalement heure_atteinte et telephone_retourne devraient etre
                 // echanges, de meme pour geolocalisation et something_close, mais si on le fait
@@ -197,7 +197,7 @@ public class ParamRegles extends Activity {
                     ruleType.setSelection(4);
                     break;
             }
-            typeRegle = EnumTypeRegle.toEnumTypeRegle(r);
+            typeRegle = EnumTypeRule.toEnumTypeRule(r);
 
             for (int i = 0; i < MyData.appelData().getListeProfils().size(); i++) {
                 if (r.getRuleProfil().equals(MyData.appelData().getListeProfils().get(i))) {
@@ -214,22 +214,22 @@ public class ParamRegles extends Activity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 0:
-                        typeRegle = EnumTypeRegle.Ecouteurs_Connectes;
+                        typeRegle = EnumTypeRule.Ecouteurs_Connectes;
                         break;
                     case 1:
-                        typeRegle = EnumTypeRegle.Heure_Atteinte;
+                        typeRegle = EnumTypeRule.Heure_Atteinte;
                         break;
                     case 2:
-                        typeRegle = EnumTypeRegle.Telephone_Retourne;
+                        typeRegle = EnumTypeRule.Telephone_Retourne;
                         break;
                     case 3:
-                        typeRegle = EnumTypeRegle.Something_Close;
+                        typeRegle = EnumTypeRule.Something_Close;
                         break;
                     case 4:
-                        typeRegle = EnumTypeRegle.Secouer;
+                        typeRegle = EnumTypeRule.Secouer;
                         break;
                     case 5:
-                        typeRegle = EnumTypeRegle.Geolocalisation;
+                        typeRegle = EnumTypeRule.Geolocalisation;
                         break;
                 }
                 setMyView();
@@ -333,7 +333,7 @@ public class ParamRegles extends Activity {
                             typeRegle.getIconeId());
                     break;
                 case Telephone_Retourne:
-                    r = new RetournementRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId());
+                    r = new FlippingRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId());
                     break;
                 case Heure_Atteinte:
                     GregorianCalendar c = new GregorianCalendar(year, month, day, hour, minute);
