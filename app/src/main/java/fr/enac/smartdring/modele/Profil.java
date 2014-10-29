@@ -21,16 +21,19 @@ public class Profil {
 
     /**
      * Constructeur d'un profil audio.
-     * @param name Le nom du profil.
-     * @param iconeId L'identifiant de l'icone associée au profil.
+     *
+     * @param name                    Le nom du profil.
+     * @param iconeId                 L'identifiant de l'icone associée au profil.
      * @param streamNotificationValue Le volume des notifications.
-     * @param streamSystemValue Le volume des bruits systèmes.
-     * @param streamRingValue Le volume de la sonnerie du téléphone.
-     * @param streamVoiceValue Le volume de la voix d'un appelant.
-     * @param streamAlarmValue Le volme du réveil.
-     * @param streamMusicValue Le volume de la musique.
+     * @param streamSystemValue       Le volume des bruits systèmes.
+     * @param streamRingValue         Le volume de la sonnerie du téléphone.
+     * @param streamVoiceValue        Le volume de la voix d'un appelant.
+     * @param streamAlarmValue        Le volme du réveil.
+     * @param streamMusicValue        Le volume de la musique.
      */
-    public Profil(String name, int iconeId, int streamNotificationValue, int streamSystemValue, int streamRingValue, int streamVoiceValue, int streamAlarmValue, int streamMusicValue) {
+    public Profil(String name, int iconeId, int streamNotificationValue, int streamSystemValue,
+                  int streamRingValue, int streamVoiceValue, int streamAlarmValue,
+                  int streamMusicValue) {
         this.name = name;
         this.iconeId = iconeId;
         this.streamNotificationValue = streamNotificationValue;
@@ -42,6 +45,34 @@ public class Profil {
         this.isActive = false;
     }
 
+    /**
+     * Constructeur d'un profil audio.
+     *
+     * @param name                    Le nom du profil.
+     * @param iconeId                 L'identifiant de l'icone associée au profil.
+     * @param streamNotificationValue Le volume des notifications.
+     * @param streamSystemValue       Le volume des bruits systèmes.
+     * @param streamRingValue         Le volume de la sonnerie du téléphone.
+     * @param streamVoiceValue        Le volume de la voix d'un appelant.
+     * @param streamAlarmValue        Le volme du réveil.
+     * @param streamMusicValue        Le volume de la musique.
+     */
+    public Profil(String name, int iconeId, int streamNotificationValue, int streamSystemValue,
+                  int streamRingValue, int streamVoiceValue, int streamAlarmValue,
+                  int streamMusicValue, int isActive) {
+        this.name = name;
+        this.iconeId = iconeId;
+        this.streamNotificationValue = streamNotificationValue;
+        this.streamSystemValue = streamSystemValue;
+        this.streamRingValue = streamRingValue;
+        this.streamVoiceValue = streamVoiceValue;
+        this.streamAlarmValue = streamAlarmValue;
+        this.streamMusicValue = streamMusicValue;
+        if (isActive == 0)
+            this.isActive = false;
+        else
+            this.isActive = true;
+    }
 
     /* ---- Getter et setter ---- */
     public String getName() {

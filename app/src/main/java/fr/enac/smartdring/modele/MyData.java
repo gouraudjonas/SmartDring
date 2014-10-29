@@ -65,6 +65,10 @@ public class MyData {
         return listeProfils;
     }
 
+    public void setListeProfils(ArrayList<Profil> listeProfils) {
+        this.listeProfils = listeProfils;
+    }
+
     public ArrayList<Rule> getListeRegles() {
         return listeRegles;
     }
