@@ -7,7 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
 import fr.enac.smartdring.MyService;
-import fr.enac.smartdring.modele.Profil;
+import fr.enac.smartdring.modele.profiles.Profil;
 
 /**
  * Cette classe gère le contexte "le téléphone est face contre le mur".

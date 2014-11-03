@@ -16,14 +16,15 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
-import fr.enac.smartdring.State;
-import fr.enac.smartdring.MyMap;
+import java.util.ArrayList;
+
+import fr.enac.smartdring.fragments.ProfilesList;
+import fr.enac.smartdring.fragments.State;
 import fr.enac.smartdring.R;
-import fr.enac.smartdring.modele.MyData;
-import fr.enac.smartdring.modele.Profil;
+import fr.enac.smartdring.sauvegarde.MyData;
+import fr.enac.smartdring.modele.profiles.Profil;
 
 
 /**
@@ -35,7 +36,6 @@ public class FragmentProfiles extends Fragment {
     private View vProfils;
     private ListView list;
     private State etat;
-    private Button map;
 
     /**
      * Constructeur associe a la classe.
@@ -57,8 +57,10 @@ public class FragmentProfiles extends Fragment {
 
         /* ---- Affichage de la liste des profils ---- */
         String noms[] = new String[MyData.appelData().getListeProfils().size()];
+        final ArrayList<String> id = new ArrayList<String>();
         Integer icones[] = new Integer[MyData.appelData().getListeProfils().size()];
         for (int i = 0; i < MyData.appelData().getListeProfils().size(); i++) {
+            id.add(MyData.appelData().getListeProfils().get(i).getName());
             noms[i] = MyData.appelData().getListeProfils().get(i).getName();
             icones[i] = MyData.appelData().getListeProfils().get(i).getIconeId();
         }
@@ -95,20 +97,16 @@ public class FragmentProfiles extends Fragment {
                 }
                 view.setBackgroundColor(Color.LTGRAY);
                 manageActionBar();
-                MyData.appelData().setProfilSelectedNum(i);
+                for (int k = 0 ; k < MyData.appelData().getListeProfils().size() ; k++){
+                    if(MyData.appelData().getListeProfils().get(k).getName().equals(id.get(i))){
+                        MyData.appelData().setProfilSelectedNum(k);
+                        break;
+                    }
+                }
                 return true;
             }
         });
         /* ---- ---- */
-
-        map = (Button) vProfils.findViewById(R.id.map);
-        map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), MyMap.class);
-                startActivity(intent);
-            }
-        });
 
         return vProfils;
     }

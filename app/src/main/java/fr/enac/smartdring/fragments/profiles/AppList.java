@@ -1,22 +1,14 @@
-package fr.enac.smartdring.modele;
+package fr.enac.smartdring.fragments.profiles;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.widget.ImageView;
-
-import java.util.List;
 
 import fr.enac.smartdring.R;
-import fr.enac.smartdring.fragments.profiles.ParamProfile;
-import fr.enac.smartdring.fragments.profiles.ProfilesList;
+import fr.enac.smartdring.fragments.ProfilesList;
 
 /**
  * Created by chevalier on 10/10/14.

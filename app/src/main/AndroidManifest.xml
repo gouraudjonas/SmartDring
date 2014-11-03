@@ -25,7 +25,7 @@
             android:label="@string/title_activity_param_profile" >
         </activity>
         <activity
-            android:name=".MyMap"
+            android:name=".map.MyMap"
             android:label="@string/title_activity_my_map" >
         </activity>
 

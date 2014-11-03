@@ -7,9 +7,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.FloatMath;
-import android.util.Log;
 
-import fr.enac.smartdring.modele.Profil;
+import fr.enac.smartdring.modele.profiles.Profil;
 
 /**
  * Created by chevalier on 24/10/14.

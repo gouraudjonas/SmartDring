@@ -3,6 +3,7 @@ package fr.enac.smartdring.fragments.regles;
 import fr.enac.smartdring.R;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
 import fr.enac.smartdring.modele.regles.FlippingRule;
+import fr.enac.smartdring.modele.regles.GeoRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.Rule;
 import fr.enac.smartdring.modele.regles.ShakeRule;
@@ -35,6 +36,9 @@ public enum EnumTypeRule {
         }
         if (r instanceof ShakeRule){
             return Secouer;
+        }
+        if (r instanceof GeoRule){
+            return Geolocalisation;
         }
 
         return null;

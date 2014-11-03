@@ -15,8 +15,8 @@ import android.view.MenuItem;
 
 import fr.enac.smartdring.fragments.profiles.ParamProfile;
 import fr.enac.smartdring.fragments.regles.ParamRules;
-import fr.enac.smartdring.modele.DataSaver;
-import fr.enac.smartdring.modele.MyData;
+import fr.enac.smartdring.sauvegarde.DataSaver;
+import fr.enac.smartdring.sauvegarde.MyData;
 
 
 /**
@@ -202,6 +202,9 @@ public class MainActivity extends FragmentActivity implements TabListener {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 MyData.appelData().getListeRules().remove(MyData.appelData().getRegleSelectedNum());
+                                Intent intent = new Intent(getApplication(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         });
                 alertDialog.setNegativeButton("ANNULER",

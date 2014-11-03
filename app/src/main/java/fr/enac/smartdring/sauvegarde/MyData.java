@@ -1,18 +1,13 @@
-package fr.enac.smartdring.modele;
+package fr.enac.smartdring.sauvegarde;
 
-import android.content.ComponentName;
-import android.content.ServiceConnection;
-import android.os.IBinder;
-import android.os.Messenger;
 import android.view.Menu;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
-import fr.enac.smartdring.MyService;
-import fr.enac.smartdring.fragments.profiles.ProfilesList;
+import fr.enac.smartdring.modele.Position;
+import fr.enac.smartdring.modele.profiles.Profil;
+import fr.enac.smartdring.modele.regles.GeoRule;
 import fr.enac.smartdring.modele.regles.Rule;
 
 /**
@@ -26,6 +21,8 @@ public class MyData {
 
     private Menu menu;
     private static ArrayList<Profil> listeProfils;
+    private static Hashtable<String,Position> myLoc;
+    private GeoRule tmpRule;
     private int activeProfilNum = -1;
     private int ProfilSelectedNum;
     private boolean createProfil;
@@ -41,6 +38,7 @@ public class MyData {
      */
     private MyData (){}
 
+
     /**
      * Cette methode permet la creation  de l'unique instance de la classe MyData. Cette instance offre alors la possibilite de
      * stocker les informations.
@@ -51,6 +49,8 @@ public class MyData {
             listeProfils = new ArrayList<Profil>();
             listeRules = new ArrayList<Rule>();
             instance = new MyData ();
+            myLoc = new Hashtable<String, Position>();
+
         }
         return instance;
     }
@@ -96,6 +96,14 @@ public class MyData {
         ProfilSelectedNum = profilSelectedNum;
     }
 
+    public Hashtable<String, Position> getMyLoc() {
+        return myLoc;
+    }
+
+    public  void setMyLoc (Hashtable<String, Position> h){
+        myLoc = h;
+    }
+
     public boolean isCreateProfil() {
         return createProfil;
     }
@@ -126,6 +134,14 @@ public class MyData {
 
     public void setActiveProfil(int activeProfilNum) {
         this.activeProfilNum = activeProfilNum;
+    }
+
+    public GeoRule getTmpRule() {
+        return tmpRule;
+    }
+
+    public void setTmpRule (GeoRule r){
+        tmpRule = r;
     }
     /* ---- ---- */
 }

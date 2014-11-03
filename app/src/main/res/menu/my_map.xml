@@ -1,8 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="fr.enac.smartdring.MyMap" >
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
+    tools:context="fr.enac.smartdring.map.MyMap" >
+    <item android:id="@+id/mapAnnuler"
+        android:title="Annuler"
+        android:icon="@drawable/ic_action_cancel"
+        android:showAsAction="ifRoom" />
+    <item android:id="@+id/mapValider"
+        android:title="Valider"
+        android:icon="@drawable/ic_action_accept"
+        android:showAsAction="ifRoom" />
+
 </menu>

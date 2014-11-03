@@ -1,4 +1,4 @@
-package fr.enac.smartdring.fragments.profiles;
+package fr.enac.smartdring.fragments;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import fr.enac.smartdring.R;
-import fr.enac.smartdring.modele.MyData;
+import fr.enac.smartdring.sauvegarde.MyData;
 
 /**
  * Cette classe est l'adapteur pour la liste des profils de l'application :

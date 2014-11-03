@@ -65,8 +65,25 @@
             <Button
                 android:id="@+id/map_button"
                 android:layout_width="wrap_content"
+                android:layout_gravity="center"
                 android:layout_height="wrap_content"
                 android:text="Carte Google Map"/>
+            <RadioGroup
+                android:id="@+id/map_radio"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/radio_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Si entrée en zone"/>
+            <RadioButton
+                android:id="@+id/radio_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Si sortie de zone"/>
+            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="fill_parent"

@@ -1,9 +1,11 @@
-package fr.enac.smartdring;
+package fr.enac.smartdring.modele;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
+
+import fr.enac.smartdring.MyService;
 
 /**
  * Created by sacapuce on 12/10/2014.

@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.media.AudioManager;
 
-import fr.enac.smartdring.modele.Profil;
+import fr.enac.smartdring.modele.profiles.Profil;
 
 /**
  * Cette classe abstraite représente les règles de changement de profil automatique en fonction du contexte.

@@ -7,11 +7,15 @@ import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.LocationManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
+import fr.enac.smartdring.modele.PhoneStateReceiver;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
 import fr.enac.smartdring.modele.regles.FlippingRule;
+import fr.enac.smartdring.modele.regles.GeoRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.Rule;
 import fr.enac.smartdring.modele.regles.ShakeRule;
@@ -25,6 +29,8 @@ public class MyService extends Service {
     private Sensor mSensorProximity;
     private Sensor mSensorAccel;
 
+    private LocationManager mLocationManager;
+
     private PhoneStateReceiver mPhoneStateReceiver;
     static private boolean incomingCall = false;
 
@@ -33,10 +39,12 @@ public class MyService extends Service {
 
     @Override
     public void onCreate (){
+        Log.d("CREATE SERVICE", "CREATE");
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mSensorAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // Phone call management
         mPhoneStateReceiver = new PhoneStateReceiver();
@@ -85,6 +93,10 @@ public class MyService extends Service {
             ((ShakeRule) r).serviceSetContext(this.getBaseContext());
             mSensorManager.registerListener((SensorEventListener) r,mSensorAccel,SensorManager.SENSOR_DELAY_GAME);
         }
+        if (r instanceof GeoRule){
+            ((GeoRule) r).serviceSetContext(this.getBaseContext());
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, (android.location.LocationListener) r);
+        }
     }
 
     /**
@@ -107,6 +119,9 @@ public class MyService extends Service {
         }
         if (r instanceof ShakeRule){
             mSensorManager.unregisterListener((SensorEventListener) r, mSensorAccel);
+        }
+        if (r instanceof GeoRule){
+            mLocationManager.removeUpdates((android.location.LocationListener) r);
         }
     }
     /* ---- ---- */

@@ -7,7 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
 import fr.enac.smartdring.MyService;
-import fr.enac.smartdring.modele.Profil;
+import fr.enac.smartdring.modele.profiles.Profil;
 
 /**
  * Created by Jonas on 22/10/2014.

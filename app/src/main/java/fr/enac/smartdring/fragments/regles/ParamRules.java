@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -34,13 +35,15 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import fr.enac.smartdring.MainActivity;
+import fr.enac.smartdring.map.MyMap;
 import fr.enac.smartdring.MyService;
 import fr.enac.smartdring.R;
-import fr.enac.smartdring.fragments.profiles.ProfilesList;
-import fr.enac.smartdring.modele.MyData;
-import fr.enac.smartdring.modele.Profil;
+import fr.enac.smartdring.fragments.ProfilesList;
+import fr.enac.smartdring.sauvegarde.MyData;
+import fr.enac.smartdring.modele.profiles.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
 import fr.enac.smartdring.modele.regles.FlippingRule;
+import fr.enac.smartdring.modele.regles.GeoRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.Rule;
 import fr.enac.smartdring.modele.regles.ShakeRule;
@@ -88,6 +91,7 @@ public class ParamRules extends Activity {
     private TextView ruleIndication;
     private Button boutonDate, boutonTime;
     private TextView afficheDate, afficheTime;
+    private RadioGroup mapRadio;
     String date, heure;
     int year, month, day, hour, minute;
     /* -- -- */
@@ -108,11 +112,12 @@ public class ParamRules extends Activity {
         afficheTime = (TextView) this.findViewById(R.id.afficheTime);
         boutonDate = (Button) this.findViewById(R.id.selectDate);
         boutonTime = (Button) this.findViewById(R.id.selectTime);
+        mapRadio = (RadioGroup) this.findViewById(R.id.map_radio);
         /* ---- ---- */
 
 
         /* ---- On paramètre les heures ---- */
-        if (MyData.appelData().isCreateRegle()) {
+        if (MyData.appelData().isCreateRegle() || !(MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum()) instanceof TimerRule)) {
             Date d = new Date();
             SimpleDateFormat f = new SimpleDateFormat("HH:mm");
             SimpleDateFormat f2 = new SimpleDateFormat("dd/MM/yy");
@@ -124,7 +129,18 @@ public class ParamRules extends Activity {
             hour = Calendar.getInstance().get(Calendar.HOUR);
             minute = Calendar.getInstance().get(Calendar.MINUTE);
         } else {
-
+            TimerRule tmp = (TimerRule) MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum());
+            GregorianCalendar c = tmp.getRuleCondition();
+            Date d = c.getTime();
+            SimpleDateFormat f = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat f2 = new SimpleDateFormat("dd/MM/yy");
+            date = f2.format(d);
+            heure = f.format(d);
+            year = c.get(Calendar.YEAR);
+            month = c.get(Calendar.MONTH);
+            day = c.get(Calendar.DAY_OF_MONTH);
+            hour = c.get(Calendar.HOUR);
+            minute = c.get(Calendar.MINUTE);
         }
         afficheDate.setText(date);
         afficheTime.setText(heure);
@@ -176,24 +192,22 @@ public class ParamRules extends Activity {
             ruleName.setText(MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum()).getRuleName());
             Rule r = MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum());
             switch (EnumTypeRule.toEnumTypeRule(r)) {
-
-                // truc bizarre : normalement heure_atteinte et telephone_retourne devraient etre
-                // echanges, de meme pour geolocalisation et something_close, mais si on le fait
-                // les affichages ne correspondent pas
-                // il doit y avoir un autre echange quelque part
                 case Ecouteurs_Connectes:
                     ruleType.setSelection(0);
                     break;
                 case Telephone_Retourne:
-                    ruleType.setSelection(1);
-                    break;
-                case Heure_Atteinte:
                     ruleType.setSelection(2);
                     break;
+                case Heure_Atteinte:
+                    ruleType.setSelection(1);
+                    break;
                 case Geolocalisation:
-                    ruleType.setSelection(3);
+                    ruleType.setSelection(5);
                     break;
                 case Something_Close:
+                    ruleType.setSelection(3);
+                    break;
+                case Secouer:
                     ruleType.setSelection(4);
                     break;
             }
@@ -204,6 +218,7 @@ public class ParamRules extends Activity {
                     ruleProfile.setSelection(i);
                 }
             }
+            setMyView();
         }
         /* ---- ---- */
 
@@ -256,6 +271,7 @@ public class ParamRules extends Activity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+        /* ---- ---- */
 
         // Gestion du controle du nom de la règle, on empeche de sauvegarder en cas de doublon de noms :
         ruleName.addTextChangedListener(new TextWatcher() {
@@ -284,7 +300,45 @@ public class ParamRules extends Activity {
                 setSavePossible (doublon);
             }
         });
-        /* ---- ---- */
+
+        // Pour le bouton de la map :
+        map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyData.appelData().setTmpRule(new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapRadio.getChildAt(0).isActivated()));
+                Intent intent = new Intent(getContext(), MyMap.class);
+                startActivity(intent);
+            }
+        });
+
+        // Pour les radio group et la carte :
+        mapRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                setMyView();
+            }
+        });
+        if (!MyData.appelData().isCreateRegle() && MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum()) instanceof GeoRule){
+            GeoRule tmp = (GeoRule) MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum());
+            mapRadio.getChildAt(0).setSelected(tmp.getIndoor());
+            mapRadio.getChildAt(1).setSelected(!tmp.getIndoor());
+            MyData.appelData().setMyLoc(tmp.getLocListe());
+        } else {
+            mapRadio.getChildAt(0).setSelected(true);
+            mapRadio.getChildAt(1).setSelected(false);
+            if (MyData.appelData().getTmpRule() == null){
+                MyData.appelData().getMyLoc().clear();
+            }
+        }
+
+        // Retour depuis la carte :
+        if (MyData.appelData().getTmpRule() != null){
+            ruleName.setText(MyData.appelData().getTmpRule().getRuleName());
+            ruleType.setSelection(5);
+            mapRadio.getChildAt(0).setSelected(MyData.appelData().getTmpRule().getIndoor());
+            mapRadio.getChildAt(1).setSelected(!MyData.appelData().getTmpRule().getIndoor());
+        }
+        MyData.appelData().setTmpRule(null);
 
         // On adapte la vue à la situation :
         setMyView();
@@ -340,6 +394,7 @@ public class ParamRules extends Activity {
                     r = new TimerRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), c);
                     break;
                 case Geolocalisation:
+                    r = new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapRadio.getCheckedRadioButtonId() == R.id.radio_in, MyData.appelData().getMyLoc());
                     break;
                 case Something_Close:
                     r = new ProximityRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId());
@@ -375,6 +430,7 @@ public class ParamRules extends Activity {
         switch (typeRegle) {
             case Ecouteurs_Connectes:
                 map.setVisibility(View.GONE);
+                mapRadio.setVisibility(View.GONE);
                 afficheTime.setVisibility(View.GONE);
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
@@ -383,6 +439,7 @@ public class ParamRules extends Activity {
                 break;
             case Telephone_Retourne:
                 map.setVisibility(View.GONE);
+                mapRadio.setVisibility(View.GONE);
                 afficheTime.setVisibility(View.GONE);
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
@@ -392,6 +449,7 @@ public class ParamRules extends Activity {
                 break;
             case Heure_Atteinte:
                 map.setVisibility(View.GONE);
+                mapRadio.setVisibility(View.GONE);
                 afficheTime.setVisibility(View.VISIBLE);
                 afficheDate.setVisibility(View.VISIBLE);
                 boutonDate.setVisibility(View.VISIBLE);
@@ -400,14 +458,21 @@ public class ParamRules extends Activity {
                 break;
             case Geolocalisation:
                 map.setVisibility(View.VISIBLE);
+                mapRadio.setVisibility(View.VISIBLE);
                 afficheTime.setVisibility(View.GONE);
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
-                ruleIndication.setText("Actif dès que vous entrerez dans la zone suivante :");
+                if (mapRadio.getChildAt(0).isActivated()) {
+                    ruleIndication.setText("Actif dès que vous entrerez dans la zone suivante :");
+                }
+                else if (mapRadio.getChildAt(1).isActivated()){
+                    ruleIndication.setText("Actif dès que vous sortirez dans la zone suivante :");
+                }
                 break;
             case Something_Close:
                 map.setVisibility(View.GONE);
+                mapRadio.setVisibility(View.GONE);
                 afficheTime.setVisibility(View.GONE);
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
@@ -417,11 +482,12 @@ public class ParamRules extends Activity {
                 break;
             case Secouer:
                 map.setVisibility(View.GONE);
+                mapRadio.setVisibility(View.GONE);
                 afficheTime.setVisibility(View.GONE);
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
-                ruleIndication.setText("Actif si vous secouer le téléphone.");
+                ruleIndication.setText("Actif si vous secouez le téléphone.");
                 break;
         }
     }
@@ -485,8 +551,13 @@ public class ParamRules extends Activity {
     }
 
     private void setSavePossible (boolean doublon){
-        m.findItem(R.id.save).setVisible(!doublon);
-        ruleName.setTextColor(doublon ? Color.RED : Color.BLACK);
+        if (m != null) {
+            m.findItem(R.id.save).setVisible(!doublon);
+            ruleName.setTextColor(doublon ? Color.RED : Color.BLACK);
+        }
     }
 
+    private Context getContext() {
+        return this;
+    }
 }

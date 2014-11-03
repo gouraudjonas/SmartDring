@@ -2,9 +2,8 @@ package fr.enac.smartdring.modele.regles;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 
-import fr.enac.smartdring.modele.Profil;
+import fr.enac.smartdring.modele.profiles.Profil;
 
 /**
  * Cette classe est une règle qui gère le contexte "un périphérique audio de sortie est t'il connecté" (comme des écouteurs par exemple).

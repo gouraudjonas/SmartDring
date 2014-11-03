@@ -2,13 +2,11 @@ package fr.enac.smartdring.modele.regles;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import fr.enac.smartdring.modele.Profil;
+import fr.enac.smartdring.modele.profiles.Profil;
 
 /**
  * Cette classe est une règle qui gère le contexte "temps". Un profil est automatiquement appliqué à une certaine heure.
@@ -37,6 +35,14 @@ public class TimerRule extends Rule {
     public TimerRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
                            int isActive){
         super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive);
+    }
+
+    public GregorianCalendar getRuleCondition() {
+        return ruleCondition;
+    }
+
+    public void setRuleCondition(GregorianCalendar ruleCondition) {
+        this.ruleCondition = ruleCondition;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package fr.enac.smartdring;
+package fr.enac.smartdring.fragments;
 
 /**
  * Machine à état gerant les actions de l'ation bar.

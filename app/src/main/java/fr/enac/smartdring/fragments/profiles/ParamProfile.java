@@ -18,9 +18,8 @@ import android.widget.SeekBar;
 
 import fr.enac.smartdring.MainActivity;
 import fr.enac.smartdring.R;
-import fr.enac.smartdring.modele.AppList;
-import fr.enac.smartdring.modele.MyData;
-import fr.enac.smartdring.modele.Profil;
+import fr.enac.smartdring.sauvegarde.MyData;
+import fr.enac.smartdring.modele.profiles.Profil;
 
 /**
  * Cette classe gere l'ecctivité de gestion des profils.

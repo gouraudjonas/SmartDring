@@ -1,4 +1,4 @@
-package fr.enac.smartdring.modele;
+package fr.enac.smartdring.sauvegarde;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import fr.enac.smartdring.modele.profiles.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
 import fr.enac.smartdring.modele.regles.FlippingRule;
 import fr.enac.smartdring.modele.regles.ProximityRule;
