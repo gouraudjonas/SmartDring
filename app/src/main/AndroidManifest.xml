@@ -28,9 +28,20 @@
             android:name=".map.MyMap"
             android:label="@string/title_activity_my_map" >
         </activity>
+        <activity
+            android:name=".fragments.regles.ParamRules"
+            android:label="@string/title_activity_regles" >
+        </activity>
 
+        <receiver android:name=".StarterService" android:enabled="true"
+            android:exported="false" android:label="StarterService">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <service
             android:name=".MyService"
+            android:label="MyService"
             android:enabled="true"
             android:exported="true" >
         </service>
@@ -42,10 +53,6 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCinZosXXZwG2cn-pLIPzyZNyWHude0aeQ" />
 
-        <activity
-            android:name=".fragments.regles.ParamRules"
-            android:label="@string/title_activity_regles" >
-        </activity>
     </application>
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -54,6 +61,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature
         android:glEsVersion="0x00020000"

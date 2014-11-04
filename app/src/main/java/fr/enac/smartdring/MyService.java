@@ -20,6 +20,7 @@ import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.Rule;
 import fr.enac.smartdring.modele.regles.ShakeRule;
 import fr.enac.smartdring.modele.regles.TimerRule;
+import fr.enac.smartdring.sauvegarde.MyData;
 
 public class MyService extends Service {
     private IBinder myBinder = new ServiceInterface();
@@ -33,13 +34,13 @@ public class MyService extends Service {
 
     private PhoneStateReceiver mPhoneStateReceiver;
     static private boolean incomingCall = false;
+    static private boolean demmarage = true;
 
     public MyService() {
     }
 
     @Override
     public void onCreate (){
-        Log.d("CREATE SERVICE", "CREATE");
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
@@ -54,7 +55,19 @@ public class MyService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        // APPEL BDD et charement de la listeRules. //
+        if (demmarage){
+            for (Rule r : MyData.appelData().getListeRules()) {
+                abonnerRegle(r);
+                demmarage = false;
+            }
+        }
         return myBinder;
+    }
+
+    @Override
+    public void onDestroy() {
+      demmarage = true;
     }
 
     static public boolean isIncomingCall(){
