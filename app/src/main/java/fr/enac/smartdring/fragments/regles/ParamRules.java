@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -92,6 +93,7 @@ public class ParamRules extends Activity {
     private Button boutonDate, boutonTime;
     private TextView afficheDate, afficheTime;
     private RadioGroup mapRadio;
+    private RadioButton mapIn, mapOut;
     String date, heure;
     int year, month, day, hour, minute;
     /* -- -- */
@@ -113,6 +115,8 @@ public class ParamRules extends Activity {
         boutonDate = (Button) this.findViewById(R.id.selectDate);
         boutonTime = (Button) this.findViewById(R.id.selectTime);
         mapRadio = (RadioGroup) this.findViewById(R.id.map_radio);
+        mapIn = (RadioButton) this.findViewById(R.id.radio_in);
+        mapOut = (RadioButton) this.findViewById(R.id.radio_out);
         /* ---- ---- */
 
 
@@ -305,7 +309,7 @@ public class ParamRules extends Activity {
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyData.appelData().setTmpRule(new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapRadio.getChildAt(0).isActivated()));
+                MyData.appelData().setTmpRule(new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapIn.isChecked(),getContext()));
                 Intent intent = new Intent(getContext(), MyMap.class);
                 startActivity(intent);
             }
@@ -320,12 +324,10 @@ public class ParamRules extends Activity {
         });
         if (!MyData.appelData().isCreateRegle() && MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum()) instanceof GeoRule){
             GeoRule tmp = (GeoRule) MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum());
-            mapRadio.getChildAt(0).setSelected(tmp.getIndoor());
-            mapRadio.getChildAt(1).setSelected(!tmp.getIndoor());
+            mapIn.setChecked(tmp.getIndoor());
             MyData.appelData().setMyLoc(tmp.getLocListe());
         } else {
-            mapRadio.getChildAt(0).setSelected(true);
-            mapRadio.getChildAt(1).setSelected(false);
+            mapIn.setChecked(true);
             if (MyData.appelData().getTmpRule() == null){
                 MyData.appelData().getMyLoc().clear();
             }
@@ -335,8 +337,7 @@ public class ParamRules extends Activity {
         if (MyData.appelData().getTmpRule() != null){
             ruleName.setText(MyData.appelData().getTmpRule().getRuleName());
             ruleType.setSelection(5);
-            mapRadio.getChildAt(0).setSelected(MyData.appelData().getTmpRule().getIndoor());
-            mapRadio.getChildAt(1).setSelected(!MyData.appelData().getTmpRule().getIndoor());
+            mapIn.setChecked(MyData.appelData().getTmpRule().getIndoor());
         }
         MyData.appelData().setTmpRule(null);
 
@@ -384,23 +385,23 @@ public class ParamRules extends Activity {
             switch (typeRegle) {
                 case Ecouteurs_Connectes:
                     r = new AudioPeriphRule(ruleName.getText().toString(), profilActivation,
-                            typeRegle.getIconeId());
+                            typeRegle.getIconeId(), this);
                     break;
                 case Telephone_Retourne:
-                    r = new FlippingRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId());
+                    r = new FlippingRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), this);
                     break;
                 case Heure_Atteinte:
                     GregorianCalendar c = new GregorianCalendar(year, month, day, hour, minute);
-                    r = new TimerRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), c);
+                    r = new TimerRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), c, this);
                     break;
                 case Geolocalisation:
-                    r = new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapRadio.getCheckedRadioButtonId() == R.id.radio_in, MyData.appelData().getMyLoc());
+                    r = new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapIn.isChecked(), MyData.appelData().getMyLoc(), this);
                     break;
                 case Something_Close:
-                    r = new ProximityRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId());
+                    r = new ProximityRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), this);
                     break;
                 case Secouer:
-                    r = new ShakeRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId());
+                    r = new ShakeRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), this);
                     break;
             }
             if (MyData.appelData().isCreateRegle()) {
@@ -463,11 +464,11 @@ public class ParamRules extends Activity {
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
-                if (mapRadio.getChildAt(0).isActivated()) {
+                if (mapIn.isChecked()) {
                     ruleIndication.setText("Actif dès que vous entrerez dans la zone suivante :");
                 }
-                else if (mapRadio.getChildAt(1).isActivated()){
-                    ruleIndication.setText("Actif dès que vous sortirez dans la zone suivante :");
+                else {
+                    ruleIndication.setText("Actif dès que vous sortirez de la zone suivante :");
                 }
                 break;
             case Something_Close:

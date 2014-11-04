@@ -20,6 +20,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import fr.enac.smartdring.MainActivity;
 import fr.enac.smartdring.fragments.ProfilesList;
 import fr.enac.smartdring.fragments.State;
 import fr.enac.smartdring.R;
@@ -150,7 +151,7 @@ public class FragmentProfiles extends Fragment {
         Context context = this.getContext();
         final int mID = 1;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context).setSmallIcon(p.getIconeId());
-        Intent intent = new Intent(context, FragmentProfiles.class);
+        Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(context, mID, intent, 0);
         builder.setContentIntent(pIntent);
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

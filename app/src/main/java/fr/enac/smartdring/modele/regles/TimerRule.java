@@ -19,8 +19,8 @@ public class TimerRule extends Rule {
     private GregorianCalendar ruleCondition;
 
 
-    public TimerRule(String ruleName, Profil ruleProfil, Integer ruleIconId, GregorianCalendar ruleCondition) {
-        super(ruleName, ruleProfil, ruleIconId);
+    public TimerRule(String ruleName, Profil ruleProfil, Integer ruleIconId, GregorianCalendar ruleCondition, Context ctx) {
+        super(ruleName, ruleProfil, ruleIconId, ctx);
         this.ruleCondition = ruleCondition;
     }
 
@@ -33,8 +33,8 @@ public class TimerRule extends Rule {
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
     public TimerRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
-                           int isActive){
-        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive);
+                           int isActive, Context ctx){
+        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive, ctx);
     }
 
     public GregorianCalendar getRuleCondition() {
@@ -55,7 +55,8 @@ public class TimerRule extends Rule {
                        && ruleCondition.get(Calendar.DAY_OF_MONTH) == Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
                        && ruleCondition.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)
                        && ruleCondition.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)){
-                    activationProfil(this.getRuleProfil(), context);
+                    activationProfil(this.getRuleProfil());
+                    super.sendNotification("Date et heure atteintes", "Activation du profil " + super.getRuleName());
                 }
             }
         }

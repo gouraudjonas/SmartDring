@@ -17,7 +17,6 @@ public class ProximityRule extends Rule implements SensorEventListener {
      * Vaut true si le téléphone est face contre le sol, false sinon.
      */
     private boolean somethingClose = false;
-    private Context context;
 
     /**
      * Constructeur d'une règle liée au périphérique audio de sortie.
@@ -26,8 +25,8 @@ public class ProximityRule extends Rule implements SensorEventListener {
      * @param ruleProfil Le profil à activer si la règle est vérifiée.
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
-    public ProximityRule(String ruleName, Profil ruleProfil, Integer ruleIconId) {
-        super(ruleName, ruleProfil, ruleIconId);
+    public ProximityRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Context ctx) {
+        super(ruleName, ruleProfil, ruleIconId, ctx);
     }
 
     /**
@@ -39,17 +38,10 @@ public class ProximityRule extends Rule implements SensorEventListener {
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
     public ProximityRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
-                           int isActive){
-        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive);
+                           int isActive, Context ctx){
+        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive, ctx);
     }
 
-    /**
-     * ATTENTION : Méthode devant etre appelé par le service avant abonnement.
-     * @param ctx Le contexte du service.
-     */
-    public void serviceSetContext (Context ctx){
-        context = ctx;
-    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -59,7 +51,8 @@ public class ProximityRule extends Rule implements SensorEventListener {
         if (MyService.isIncomingCall()) {
             if (this.activationAllowed) {
                 if (distance == 0) {
-                    activationProfil(this.getRuleProfil(), context);
+                    activationProfil(this.getRuleProfil());
+                    super.sendNotification("Survole détecté", "Activation du profil " + super.getRuleName());
                     somethingClose = true;
                     this.active = true;
                 } else {

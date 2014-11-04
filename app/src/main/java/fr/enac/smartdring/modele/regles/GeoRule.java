@@ -18,7 +18,6 @@ import fr.enac.smartdring.modele.profiles.Profil;
 public class GeoRule extends Rule implements LocationListener {
     private final float CURRENT_POSITION_RAYON = 1f; //mètres
     private boolean indoor;
-    private Context context;
     private boolean out = true; // Si l'on est déjà dans la zone.
     private Hashtable<String,Position> locListe;
 
@@ -30,15 +29,15 @@ public class GeoRule extends Rule implements LocationListener {
      * @param indoor True si la règle se déclenche lorsque l'utilisateur est dans la zone, False si c'est lorsqu'il est hors zone.
      * @param locListe La liste des positions.
      */
-    public GeoRule (String ruleName, Profil ruleProfil, Integer ruleIconId, boolean indoor, Hashtable<String,Position> locListe){
-        super (ruleName, ruleProfil, ruleIconId);
+    public GeoRule (String ruleName, Profil ruleProfil, Integer ruleIconId, boolean indoor, Hashtable<String,Position> locListe, Context ctx){
+        super (ruleName, ruleProfil, ruleIconId, ctx);
         this.indoor = indoor;
         this.locListe = new Hashtable<String,Position>();
         this.locListe = locListe;
     }
 
-    public GeoRule (String ruleName, Profil ruleProfil, Integer ruleIconId, boolean indoor){
-       this(ruleName, ruleProfil, ruleIconId, indoor, null);
+    public GeoRule (String ruleName, Profil ruleProfil, Integer ruleIconId, boolean indoor, Context ctx){
+       this(ruleName, ruleProfil, ruleIconId, indoor, null, ctx);
     }
 
 
@@ -57,14 +56,6 @@ public class GeoRule extends Rule implements LocationListener {
 
     public Hashtable<String,Position> getLocListe (){
         return this.locListe;
-    }
-
-    /**
-     * ATTENTION : Méthode devant etre appelé par le service avant abonnement.
-     * @param ctx Le contexte du service.
-     */
-    public void serviceSetContext (Context ctx){
-        context = ctx;
     }
     /* -- -- */
 
@@ -95,11 +86,13 @@ public class GeoRule extends Rule implements LocationListener {
 
             if (isIn == indoor && activationAllowed && out){
                 out = false;
-                activationProfil(this.getRuleProfil(), context);
+                activationProfil(this.getRuleProfil());
+                super.sendNotification("Entrée zone : "+ locListe.get(key).getId(), "Activation du profil " + super.getRuleName());
                 break;
             } else if (isIn == !indoor && activationAllowed && !out){
                 out = true;
-                activationProfil(this.getRuleProfil(), context);
+                activationProfil(this.getRuleProfil());
+                super.sendNotification("Sortie zone : "+ locListe.get(key).getId(), "Activation du profil " + super.getRuleName());
                 break;
             }
         }

@@ -17,8 +17,8 @@ public class AudioPeriphRule extends Rule {
      * @param ruleProfil Le profil à activer si la règle est vérifiée.
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
-    public AudioPeriphRule (String ruleName, Profil ruleProfil, Integer ruleIconId){
-       super (ruleName, ruleProfil, ruleIconId);
+    public AudioPeriphRule (String ruleName, Profil ruleProfil, Integer ruleIconId, Context ctx){
+       super (ruleName, ruleProfil, ruleIconId, ctx);
     }
 
     /**
@@ -30,8 +30,8 @@ public class AudioPeriphRule extends Rule {
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
     public AudioPeriphRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
-                 int isActive){
-        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive);
+                 int isActive, Context ctx){
+        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive, ctx);
     }
 
     @Override
@@ -45,7 +45,8 @@ public class AudioPeriphRule extends Rule {
                         this.active = false;
                         break;
                     case 1:
-                        activationProfil(this.getRuleProfil(), context);
+                        activationProfil(this.getRuleProfil());
+                        super.sendNotification("Ecouteurs détectés", "Activation du profil " + super.getRuleName());
                         this.active = true;
                         break;
                 }

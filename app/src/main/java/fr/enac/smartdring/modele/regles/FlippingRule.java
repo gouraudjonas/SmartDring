@@ -18,11 +18,10 @@ public class FlippingRule extends Rule implements SensorEventListener {
      * Vaut true si le téléphone est face contre le sol, false sinon.
      */
     private boolean estRetourne = false;
-    private Context context;
 
 
-    public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId){
-        super(ruleName, ruleProfil, ruleIconId);
+    public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Context ctx){
+        super(ruleName, ruleProfil, ruleIconId, ctx);
     }
 
 
@@ -35,18 +34,10 @@ public class FlippingRule extends Rule implements SensorEventListener {
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
     public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
-                           int isActive){
-        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive);
+                           int isActive, Context ctx){
+        super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive, ctx);
     }
 
-
-    /**
-     * ATTENTION : Méthode devant etre appelé par le service avant abonnement.
-     * @param ctx Le contexte du service.
-     */
-    public void serviceSetContext (Context ctx){
-        context = ctx;
-    }
 
 
     @Override
@@ -57,7 +48,8 @@ public class FlippingRule extends Rule implements SensorEventListener {
         if (MyService.isIncomingCall()) {
             if (this.activationAllowed) {
                 if (Math.abs(pitch_angle) >= 135) {
-                    activationProfil(this.getRuleProfil(), context);
+                    activationProfil(this.getRuleProfil());
+                    super.sendNotification("Téléphone retourné", "Activation du profil " + super.getRuleName());
                     estRetourne = true;
                     this.active = true;
                 } else if (Math.abs(pitch_angle) < 90 && estRetourne) {

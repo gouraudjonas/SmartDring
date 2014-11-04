@@ -129,7 +129,7 @@ public class DataSaver {
 
                     // convention pour le type de regle : 0 -> AudioPeriphRule ; 1 -> FlippingRule ;
                     // 2 -> ProximityRule ; 3 -> ShakeRule ; 4 -> TimerRule
-                    switch (Integer.parseInt(parts[0])) {
+                  /*  switch (Integer.parseInt(parts[0])) {
                         case 0:
                             listRules.add(new AudioPeriphRule(parts[1],
                                     myProfil, Integer.parseInt(parts[3]),
@@ -155,7 +155,7 @@ public class DataSaver {
                                     myProfil, Integer.parseInt(parts[3]),
                                     Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
                             break;
-                    }
+                    }*/
                 } catch (NumberFormatException e) {
                     Log.e("DataSaver", "Probleme de recreation des regles");
                     e.printStackTrace();

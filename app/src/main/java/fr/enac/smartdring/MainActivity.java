@@ -5,13 +5,19 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import fr.enac.smartdring.fragments.profiles.ParamProfile;
 import fr.enac.smartdring.fragments.regles.ParamRules;
@@ -28,12 +34,6 @@ import fr.enac.smartdring.sauvegarde.MyData;
  * @version 1.0
  */
 public class MainActivity extends FragmentActivity implements TabListener {
-
-	/*
-     * Cette classe comprend des methodes permettant de gerer les actions faites par l'utilisateur dans l'ActionBar,
-	 * ainsi que le changement d'onglets.
-	 */
-
     /* ---- Attributs pour la vue : ---- */
     private ViewPager viewPager = null;
     private ActionBar actionBar = null;
@@ -41,6 +41,27 @@ public class MainActivity extends FragmentActivity implements TabListener {
 	/* ---- Attributs pour le modele : ---- */
     private static int ongletSelect;
 	/* ---- ---- */
+    /* ---- Interactions avec le service ---- */
+    private MyService mService;
+    private boolean mBound = false;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        // Defines callbacks for service binding, passed to bindService()
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            MyService.ServiceInterface binder = (MyService.ServiceInterface) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+    /* ---- ---- */
+
 
 
     /**
@@ -173,7 +194,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
                 alertDialog.setTitle("PAGE DES PROFILS");
                 alertDialog.setMessage("Blabla");
-                alertDialog.setIcon(android.R.drawable.ic_dialog_info);
+                alertDialog.setIcon(android.R.drawable.ic_menu_help);
                 alertDialog.setPositiveButton("FERMER",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -201,6 +222,10 @@ public class MainActivity extends FragmentActivity implements TabListener {
                 alertDialog.setPositiveButton("OUI",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                if (mBound){
+                                    Log.d("DO", "DO");
+                                    mService.desabonnerRegle(MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum()));
+                                }
                                 MyData.appelData().getListeRules().remove(MyData.appelData().getRegleSelectedNum());
                                 Intent intent = new Intent(getApplication(), MainActivity.class);
                                 startActivity(intent);

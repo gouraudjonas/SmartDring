@@ -80,21 +80,17 @@ public class MyService extends Service {
             registerReceiver(r, new IntentFilter(Intent.ACTION_TIME_TICK));
         }
         if (r instanceof FlippingRule){
-            ((FlippingRule) r).serviceSetContext(this.getBaseContext());
             mSensorManager.registerListener((SensorEventListener) r, mSensorOrientation,
                     SensorManager.SENSOR_DELAY_NORMAL);
         }
         if (r instanceof ProximityRule){
-            ((ProximityRule) r).serviceSetContext(this.getBaseContext());
             mSensorManager.registerListener((SensorEventListener) r, mSensorProximity,
                     SensorManager.SENSOR_DELAY_NORMAL);
         }
         if (r instanceof ShakeRule){
-            ((ShakeRule) r).serviceSetContext(this.getBaseContext());
             mSensorManager.registerListener((SensorEventListener) r,mSensorAccel,SensorManager.SENSOR_DELAY_GAME);
         }
         if (r instanceof GeoRule){
-            ((GeoRule) r).serviceSetContext(this.getBaseContext());
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, (android.location.LocationListener) r);
         }
     }
