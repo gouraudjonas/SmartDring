@@ -27,6 +27,7 @@ public class MyData {
     private int ProfilSelectedNum;
     private boolean createProfil;
     private static ArrayList<Rule> listeRules;
+    private static ArrayList<Rule> listeSupprRules;
     private int RegleSelectedNum;
     private boolean createRegle;
     private DataSaver myDataSaver;
@@ -50,7 +51,7 @@ public class MyData {
             listeRules = new ArrayList<Rule>();
             instance = new MyData ();
             myLoc = new Hashtable<String, Position>();
-
+            listeSupprRules = new ArrayList<Rule>();
         }
         return instance;
     }
@@ -142,6 +143,10 @@ public class MyData {
 
     public void setTmpRule (GeoRule r){
         tmpRule = r;
+    }
+
+    public ArrayList<Rule> getListeSupprRules() {
+        return listeSupprRules;
     }
     /* ---- ---- */
 }

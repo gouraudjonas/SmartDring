@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.FloatMath;
 
+import fr.enac.smartdring.MyService;
 import fr.enac.smartdring.modele.profiles.Profil;
 
 /**
@@ -19,9 +20,11 @@ public class ShakeRule extends Rule implements SensorEventListener {
     private static final int SHAKE_COUNT_RESET_TIME_MS = 3000;
     private long mShakeTimestamp;
     private int mShakeCount;
+    private boolean onlyOnRing;
 
-    public ShakeRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Context ctx) {
+    public ShakeRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Boolean onlyOnRing,Context ctx) {
         super(ruleName, ruleProfil, ruleIconId, ctx);
+        this.onlyOnRing = onlyOnRing;
     }
 
     /**
@@ -33,7 +36,7 @@ public class ShakeRule extends Rule implements SensorEventListener {
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
     public ShakeRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
-                           int isActive, Context ctx){
+                           int isActive, Boolean onlyOnRing, Context ctx){
         super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive, ctx);
     }
 
@@ -71,10 +74,11 @@ public class ShakeRule extends Rule implements SensorEventListener {
 
             mShakeTimestamp = now;
             mShakeCount++;
-
-            if (mShakeCount > 1 && this.activationAllowed) {
-                activationProfil(this.getRuleProfil());
-                super.sendNotification("Téléphone secoué", "Activation du profil " + super.getRuleName());
+            if (MyService.isIncomingCall() || !onlyOnRing) {
+                if (mShakeCount > 1 && this.activationAllowed) {
+                    activationProfil(this.getRuleProfil());
+                    super.sendNotification("Téléphone secoué", "Activation du profil " + super.getRuleName());
+                }
             }
         }
 

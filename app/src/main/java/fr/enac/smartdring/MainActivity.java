@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import fr.enac.smartdring.fragments.profiles.ParamProfile;
 import fr.enac.smartdring.fragments.regles.ParamRules;
+import fr.enac.smartdring.modele.regles.Rule;
 import fr.enac.smartdring.sauvegarde.DataSaver;
 import fr.enac.smartdring.sauvegarde.MyData;
 
@@ -41,26 +42,6 @@ public class MainActivity extends FragmentActivity implements TabListener {
 	/* ---- Attributs pour le modele : ---- */
     private static int ongletSelect;
 	/* ---- ---- */
-    /* ---- Interactions avec le service ---- */
-    private MyService mService;
-    private boolean mBound = false;
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        // Defines callbacks for service binding, passed to bindService()
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            MyService.ServiceInterface binder = (MyService.ServiceInterface) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
-    /* ---- ---- */
 
 
 
@@ -108,6 +89,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
             }
         });
     }
+
 
     /**
      * Méthode sauvegardant les données dans un fichier
@@ -193,7 +175,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
             } else if (id == R.id.help) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
                 alertDialog.setTitle("PAGE DES PROFILS");
-                alertDialog.setMessage("Blabla");
+                alertDialog.setMessage("Créez un profil en appuyant sur '+'.\n\nActivez un profil en cliquant dessus.\n\nModifiez un profil en appuyant longuement dessus.");
                 alertDialog.setIcon(android.R.drawable.ic_menu_help);
                 alertDialog.setPositiveButton("FERMER",
                         new DialogInterface.OnClickListener() {
@@ -222,10 +204,9 @@ public class MainActivity extends FragmentActivity implements TabListener {
                 alertDialog.setPositiveButton("OUI",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                if (mBound){
-                                    Log.d("DO", "DO");
-                                    mService.desabonnerRegle(MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum()));
-                                }
+                                Rule r =  MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum());
+                                r.setActivationAllowed(false);
+                                MyData.appelData().getListeSupprRules().add(r);
                                 MyData.appelData().getListeRules().remove(MyData.appelData().getRegleSelectedNum());
                                 Intent intent = new Intent(getApplication(), MainActivity.class);
                                 startActivity(intent);
@@ -233,6 +214,18 @@ public class MainActivity extends FragmentActivity implements TabListener {
                             }
                         });
                 alertDialog.setNegativeButton("ANNULER",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                alertDialog.show();
+            } else if (id == R.id.help) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                alertDialog.setTitle("PAGE DES REGLES");
+                alertDialog.setMessage("Créez une règle en appuyant sur '+'.\n\nActivez/Désactivez une règle en cliquant dessus.\n\nModifiez une règle en appuyant longuement dessus.");
+                alertDialog.setIcon(android.R.drawable.ic_menu_help);
+                alertDialog.setPositiveButton("FERMER",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();

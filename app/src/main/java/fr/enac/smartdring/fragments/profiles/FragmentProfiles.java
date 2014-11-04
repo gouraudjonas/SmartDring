@@ -97,13 +97,13 @@ public class FragmentProfiles extends Fragment {
                     parent.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
                 }
                 view.setBackgroundColor(Color.LTGRAY);
-                manageActionBar();
                 for (int k = 0 ; k < MyData.appelData().getListeProfils().size() ; k++){
                     if(MyData.appelData().getListeProfils().get(k).getName().equals(id.get(i))){
                         MyData.appelData().setProfilSelectedNum(k);
                         break;
                     }
                 }
+                manageActionBar();
                 return true;
             }
         });

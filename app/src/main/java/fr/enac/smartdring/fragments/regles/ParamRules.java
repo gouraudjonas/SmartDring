@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -75,6 +76,10 @@ public class ParamRules extends Activity {
             mService = binder.getService();
             mBound = true;
             Toast.makeText(ParamRules.this, "CONNECT", Toast.LENGTH_SHORT).show();
+            for (int i = 0 ; i < MyData.appelData().getListeSupprRules().size() ; i++){
+                mService.desabonnerRegle(MyData.appelData().getListeSupprRules().get(i));
+            }
+            MyData.appelData().getListeSupprRules().clear();
         }
 
         @Override
@@ -93,7 +98,8 @@ public class ParamRules extends Activity {
     private Button boutonDate, boutonTime;
     private TextView afficheDate, afficheTime;
     private RadioGroup mapRadio;
-    private RadioButton mapIn, mapOut;
+    private RadioButton mapIn;
+    private CheckBox ringCondition;
     String date, heure;
     int year, month, day, hour, minute;
     /* -- -- */
@@ -116,7 +122,7 @@ public class ParamRules extends Activity {
         boutonTime = (Button) this.findViewById(R.id.selectTime);
         mapRadio = (RadioGroup) this.findViewById(R.id.map_radio);
         mapIn = (RadioButton) this.findViewById(R.id.radio_in);
-        mapOut = (RadioButton) this.findViewById(R.id.radio_out);
+        ringCondition = (CheckBox) this.findViewById(R.id.check_phone_ring_condition);
         /* ---- ---- */
 
 
@@ -333,6 +339,7 @@ public class ParamRules extends Activity {
             }
         }
 
+
         // Retour depuis la carte :
         if (MyData.appelData().getTmpRule() != null){
             ruleName.setText(MyData.appelData().getTmpRule().getRuleName());
@@ -388,7 +395,7 @@ public class ParamRules extends Activity {
                             typeRegle.getIconeId(), this);
                     break;
                 case Telephone_Retourne:
-                    r = new FlippingRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), this);
+                    r = new FlippingRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), ringCondition.isChecked(), this);
                     break;
                 case Heure_Atteinte:
                     GregorianCalendar c = new GregorianCalendar(year, month, day, hour, minute);
@@ -398,10 +405,10 @@ public class ParamRules extends Activity {
                     r = new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapIn.isChecked(), MyData.appelData().getMyLoc(), this);
                     break;
                 case Something_Close:
-                    r = new ProximityRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), this);
+                    r = new ProximityRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), ringCondition.isChecked(),this);
                     break;
                 case Secouer:
-                    r = new ShakeRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), this);
+                    r = new ShakeRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), ringCondition.isChecked(),this);
                     break;
             }
             if (MyData.appelData().isCreateRegle()) {
@@ -410,6 +417,8 @@ public class ParamRules extends Activity {
                     mService.abonnerRegle(r);
                 }
             } else {
+                mService.desabonnerRegle(MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum()));
+                mService.abonnerRegle(r);
                 MyData.appelData().getListeRules().set(MyData.appelData().getRegleSelectedNum(), r);
             }
             Intent intent = new Intent(this, MainActivity.class);
@@ -436,6 +445,7 @@ public class ParamRules extends Activity {
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
+                ringCondition.setVisibility(View.GONE);
                 ruleIndication.setText("Actif si les écouteurs sont branchés.");
                 break;
             case Telephone_Retourne:
@@ -445,6 +455,7 @@ public class ParamRules extends Activity {
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
+                ringCondition.setVisibility(View.VISIBLE);
                 ruleIndication.setText("Actif si l'écran du téléphone est face contre sol et " +
                         "qu'il y a un appel.");
                 break;
@@ -455,6 +466,7 @@ public class ParamRules extends Activity {
                 afficheDate.setVisibility(View.VISIBLE);
                 boutonDate.setVisibility(View.VISIBLE);
                 boutonTime.setVisibility(View.VISIBLE);
+                ringCondition.setVisibility(View.GONE);
                 ruleIndication.setText("Actif à la date et l'heure suivante :");
                 break;
             case Geolocalisation:
@@ -464,6 +476,7 @@ public class ParamRules extends Activity {
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
+                ringCondition.setVisibility(View.GONE);
                 if (mapIn.isChecked()) {
                     ruleIndication.setText("Actif dès que vous entrerez dans la zone suivante :");
                 }
@@ -478,6 +491,7 @@ public class ParamRules extends Activity {
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
+                ringCondition.setVisibility(View.VISIBLE);
                 ruleIndication.setText("Actif si un objet est proche de l'écran du téléphone " +
                         "et qu'il y a un appel.");
                 break;
@@ -488,6 +502,7 @@ public class ParamRules extends Activity {
                 afficheDate.setVisibility(View.GONE);
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
+                ringCondition.setVisibility(View.VISIBLE);
                 ruleIndication.setText("Actif si vous secouez le téléphone.");
                 break;
         }

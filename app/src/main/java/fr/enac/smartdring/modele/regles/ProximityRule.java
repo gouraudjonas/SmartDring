@@ -17,6 +17,7 @@ public class ProximityRule extends Rule implements SensorEventListener {
      * Vaut true si le téléphone est face contre le sol, false sinon.
      */
     private boolean somethingClose = false;
+    private boolean onlyOnRing;
 
     /**
      * Constructeur d'une règle liée au périphérique audio de sortie.
@@ -24,9 +25,12 @@ public class ProximityRule extends Rule implements SensorEventListener {
      * @param ruleName   Le nom de la règle.
      * @param ruleProfil Le profil à activer si la règle est vérifiée.
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
+     * @param onlyOnRing Active la regle que si le téléphone sonne.
+     * @param ctx Le contexte Android.
      */
-    public ProximityRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Context ctx) {
+    public ProximityRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Boolean onlyOnRing, Context ctx) {
         super(ruleName, ruleProfil, ruleIconId, ctx);
+        this.onlyOnRing = onlyOnRing;
     }
 
     /**
@@ -37,7 +41,7 @@ public class ProximityRule extends Rule implements SensorEventListener {
      * @param ruleProfil Le profil à activer si la règle est vérifiée.
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
-    public ProximityRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
+    public ProximityRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Boolean onlyOnRing, int activationAllowed,
                            int isActive, Context ctx){
         super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive, ctx);
     }
@@ -48,7 +52,7 @@ public class ProximityRule extends Rule implements SensorEventListener {
         float distance = event.values[0];
 
         // L'effet ne doit se faire que s'il y a un appel, donc on test d'abord ca
-        if (MyService.isIncomingCall()) {
+        if (MyService.isIncomingCall() || !onlyOnRing) {
             if (this.activationAllowed) {
                 if (distance == 0) {
                     activationProfil(this.getRuleProfil());

@@ -18,10 +18,12 @@ public class FlippingRule extends Rule implements SensorEventListener {
      * Vaut true si le téléphone est face contre le sol, false sinon.
      */
     private boolean estRetourne = false;
+    private boolean onlyOnRing;
 
 
-    public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Context ctx){
+    public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Boolean onlyOnRing, Context ctx){
         super(ruleName, ruleProfil, ruleIconId, ctx);
+        this.onlyOnRing = onlyOnRing;
     }
 
 
@@ -34,7 +36,7 @@ public class FlippingRule extends Rule implements SensorEventListener {
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
     public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
-                           int isActive, Context ctx){
+                           int isActive, Boolean onlyOnRing, Context ctx){
         super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive, ctx);
     }
 
@@ -45,7 +47,7 @@ public class FlippingRule extends Rule implements SensorEventListener {
         float pitch_angle = event.values[1];
 
         // L'effet ne doit se faire que s'il y a un appel, donc on test d'abord ca
-        if (MyService.isIncomingCall()) {
+        if (MyService.isIncomingCall() || !onlyOnRing) {
             if (this.activationAllowed) {
                 if (Math.abs(pitch_angle) >= 135) {
                     activationProfil(this.getRuleProfil());
