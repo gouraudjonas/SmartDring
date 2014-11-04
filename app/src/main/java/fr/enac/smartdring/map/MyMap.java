@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -143,6 +144,9 @@ public class MyMap extends FragmentActivity implements GooglePlayServicesClient.
                     .title(key));
 
             CircleOptions circleOptions = new CircleOptions()
+                    .fillColor(Color.argb(75,0,0,255))
+                    .strokeWidth(5)
+                    .strokeColor(Color.argb(255,0,0,0))
                     .center(myTmpLoc.get(key).getLatLng())
                     .radius(myTmpLoc.get(key).getRadius()); // In meters
             Circle circle = mMap.addCircle(circleOptions);
