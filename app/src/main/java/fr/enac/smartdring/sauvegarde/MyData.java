@@ -20,16 +20,16 @@ public class MyData {
     private static MyData instance = null;
 
     private Menu menu;
-    private static ArrayList<Profil> listeProfils;
-    private static Hashtable<String,Position> myLoc;
+    private static ArrayList<Profil> listeProfils; // Liste des profils de l'utilisateur
+    private static Hashtable<String,Position> myLoc; // Liste des localisations pour les règles de géolocalisation.
     private GeoRule tmpRule;
-    private int activeProfilNum = -1;
-    private int ProfilSelectedNum;
-    private boolean createProfil;
-    private static ArrayList<Rule> listeRules;
-    private static ArrayList<Rule> listeSupprRules;
-    private int RegleSelectedNum;
-    private boolean createRegle;
+    private int activeProfilNum = -1; //Le numéro du profil actif.
+    private int ProfilSelectedNum; // Le numéro du profil séléctionné par l'utilisateur (en vue d'une suppression ou modification).
+    private boolean createProfil; // Permet de savoir si l'utilisateur créer un nouveau profil ou en modifie un existant.
+    private static ArrayList<Rule> listeRules; // La liste des règles crées par l'utilisateur.
+    private static ArrayList<Rule> listeSupprRules; // La liste des règles à supprimer par l'application (le temps de les désabonner).
+    private int RegleSelectedNum; //  Le numéro de la règle séléctionnée par l'utilisateur (en vue d'une suppression ou modificat
+    private boolean createRegle; // Permet de savoir si l'utilisateur créer une nouvelle règle ou en modifie une existante.
     private DataSaver myDataSaver;
 
 

@@ -22,6 +22,10 @@ import fr.enac.smartdring.modele.regles.ShakeRule;
 import fr.enac.smartdring.modele.regles.TimerRule;
 import fr.enac.smartdring.sauvegarde.MyData;
 
+/**
+ * Cette classe représente le service qui tourne en arrière plan de l'application. Le service abonne et désabonne les règles crées par l'utilisateur
+ * au listener correpondant. Ce service est relancé automatiquement à chaque démarage du téléphone.
+ */
 public class MyService extends Service {
     private IBinder myBinder = new ServiceInterface();
 
@@ -31,16 +35,18 @@ public class MyService extends Service {
     private Sensor mSensorAccel;
 
     private LocationManager mLocationManager;
-
     private PhoneStateReceiver mPhoneStateReceiver;
     static private boolean incomingCall = false;
     static private boolean demmarage = true;
 
+
     public MyService() {
     }
 
+
     @Override
     public void onCreate (){
+        // On récupère tous les managers nécessaires aux abonnements de nos règles :
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);

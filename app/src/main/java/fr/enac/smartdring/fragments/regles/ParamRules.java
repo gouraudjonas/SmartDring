@@ -75,7 +75,6 @@ public class ParamRules extends Activity {
             MyService.ServiceInterface binder = (MyService.ServiceInterface) service;
             mService = binder.getService();
             mBound = true;
-            Toast.makeText(ParamRules.this, "CONNECT", Toast.LENGTH_SHORT).show();
             for (int i = 0 ; i < MyData.appelData().getListeSupprRules().size() ; i++){
                 mService.desabonnerRegle(MyData.appelData().getListeSupprRules().get(i));
             }
@@ -85,7 +84,6 @@ public class ParamRules extends Activity {
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
-            Toast.makeText(ParamRules.this, "DECONNECT", Toast.LENGTH_SHORT).show();
         }
     };
     /* -- -- */
@@ -421,6 +419,9 @@ public class ParamRules extends Activity {
                 mService.abonnerRegle(r);
                 MyData.appelData().getListeRules().set(MyData.appelData().getRegleSelectedNum(), r);
             }
+            // On prévient l'utilisateur de l'action effectuée :
+            Toast.makeText(this, MyData.appelData().isCreateRegle() ? "Règle " + r.getRuleName() + " créée avec succès." : "Règle " + r.getRuleName() + " modifiée avec succès.", Toast.LENGTH_SHORT).show();
+            // On retourne à l'activité principale :
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 

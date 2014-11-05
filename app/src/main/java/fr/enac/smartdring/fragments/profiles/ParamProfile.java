@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import fr.enac.smartdring.MainActivity;
 import fr.enac.smartdring.R;
@@ -22,7 +23,7 @@ import fr.enac.smartdring.sauvegarde.MyData;
 import fr.enac.smartdring.modele.profiles.Profil;
 
 /**
- * Cette classe gere l'ecctivité de gestion des profils.
+ * Cette classe gere l'activité de gestion des profils.
  */
 public class ParamProfile extends FragmentActivity {
     private Menu m;
@@ -37,6 +38,7 @@ public class ParamProfile extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_param_profile);
         AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         // On récupère les widgets utiles et on les paramètres :
         profileIcone = (ImageButton) findViewById(R.id.profileIcone);
         profileName = (EditText) findViewById(R.id.profileName);
@@ -170,6 +172,8 @@ public class ParamProfile extends FragmentActivity {
                 p.setStreamNotificationValue(audioNotificationValue.getProgress());
                 p.setStreamRingValue(audioRingValue.getProgress());
             }
+            // On prévient l'utilisateur de l'action effectuée :
+            Toast.makeText(this, MyData.appelData().isCreateProfil() ? "Profil " + p.getName() + " crée avec succès." : "Profil " + p.getName() + " modifié avec succès.", Toast.LENGTH_SHORT).show();
 
             // On retourne à l'activité principale :
             Intent intent = new Intent(this, MainActivity.class);

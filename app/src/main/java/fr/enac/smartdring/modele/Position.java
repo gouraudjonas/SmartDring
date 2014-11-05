@@ -5,7 +5,7 @@ import android.location.Location;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * Un cercle autour d'un point de la carte.
+ * Un cercle autour d'un point de la carte, représente une zone utilisée pour les règles de géolocalisation.
  * Created by chevalier on 01/11/14.
  */
 public class Position {
@@ -19,6 +19,7 @@ public class Position {
         this.radius = radius;
     }
 
+    /* ---- Setter et getter ---- */
     public double getRadius() {
         return radius;
     }
@@ -47,4 +48,5 @@ public class Position {
     public Location getLoc (){
         return loc;
     }
+    /* ---- ---- */
 }

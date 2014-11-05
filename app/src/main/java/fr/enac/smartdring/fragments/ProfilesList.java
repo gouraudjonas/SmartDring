@@ -61,6 +61,22 @@ public class ProfilesList extends ArrayAdapter<String> {
                 rowView.setBackgroundColor(Color.TRANSPARENT);
             }
         }
+        if (parent.getId()==R.id.idRulesList){
+            int k = 0;
+            for (k=0;k<MyData.appelData().getListeRules().size();k++){
+                if (web[position].contains(MyData.appelData().getListeRules().get(k).getRuleName())){
+                    break;
+                }
+            }
+            if (MyData.appelData().getListeRules().get(kb).isActivationAllowed()){
+                rowView.setAlpha(1f);
+            }
+            else {
+                rowView.setAlpha(0.33f);
+            }
+            rowView.setBackgroundColor(Color.TRANSPARENT);
+        }
+
         return rowView;
     }
 }

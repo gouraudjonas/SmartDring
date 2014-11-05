@@ -67,40 +67,45 @@ public class FragmentRules extends android.support.v4.app.Fragment {
         ArrayList<Integer> icones = new ArrayList<Integer>();
         for (EnumTypeRule el : EnumTypeRule.values()) {
             for (int i = 0; i < MyData.appelData().getListeRules().size(); i++) {
-                id.add(MyData.appelData().getListeRules().get(i).getRuleName());
                 switch (el){
                     case Ecouteurs_Connectes:
                         if (MyData.appelData().getListeRules().get(i) instanceof AudioPeriphRule) {
+                            id.add(MyData.appelData().getListeRules().get(i).getRuleName());
                             nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
                             icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Heure_Atteinte:
                         if (MyData.appelData().getListeRules().get(i) instanceof TimerRule) {
+                            id.add(MyData.appelData().getListeRules().get(i).getRuleName());
                             nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
                             icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Telephone_Retourne:
                         if (MyData.appelData().getListeRules().get(i) instanceof FlippingRule) {
+                            id.add(MyData.appelData().getListeRules().get(i).getRuleName());
                             nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
                             icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Something_Close:
                         if (MyData.appelData().getListeRules().get(i) instanceof ProximityRule) {
+                            id.add(MyData.appelData().getListeRules().get(i).getRuleName());
                             nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
                             icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Secouer:
                         if (MyData.appelData().getListeRules().get(i) instanceof ShakeRule) {
+                            id.add(MyData.appelData().getListeRules().get(i).getRuleName());
                             nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
                             icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
                         break;
                     case Geolocalisation:
                         if (MyData.appelData().getListeRules().get(i) instanceof GeoRule) {
+                            id.add(MyData.appelData().getListeRules().get(i).getRuleName());
                             nom.add(MyData.appelData().getListeRules().get(i).getRuleName() + "\nProfil à activer : " + MyData.appelData().getListeRules().get(i).getRuleProfil().getName());
                             icones.add(MyData.appelData().getListeRules().get(i).getRuleIcon());
                         }
@@ -127,16 +132,21 @@ public class FragmentRules extends android.support.v4.app.Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int j, long l) {
                 etat = State.NO_SELECTION;
-                MyData.appelData().getListeRules().get(j).setActivationAllowed(!MyData.appelData().getListeRules().get(j).isActivationAllowed());
-                for (int i = 0; i < parent.getCount(); i++) {
-                    if (MyData.appelData().getListeRules().get(i).isActivationAllowed()){
-                        parent.getChildAt(i).setAlpha(1f);
+                for (int k = 0 ; k < MyData.appelData().getListeRules().size() ; k++){
+                    if(MyData.appelData().getListeRules().get(k).getRuleName().equals(id.get(j))){
+                        MyData.appelData().getListeRules().get(k).setActivationAllowed(!MyData.appelData().getListeRules().get(k).isActivationAllowed());
+                        break;
                     }
-                    else {
-                        parent.getChildAt(i).setAlpha(0.33f);
-                    }
-                    parent.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                 }
+
+
+                if (parent.getChildAt(j).getAlpha() == 1f) {
+                    parent.getChildAt(j).setAlpha(0.33f);
+                } else {
+                    parent.getChildAt(j).setAlpha(1f);
+                }
+                parent.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
+
                 manageActionBar();
             }
         });
@@ -176,7 +186,12 @@ public class FragmentRules extends android.support.v4.app.Fragment {
         if (m != null) {
             switch (this.etat) {
                 case NO_SELECTION:
-                    m.findItem(R.id.add).setVisible(true);
+                    // On ne peut créer une règle que si il y a au moins un profil existant.
+                    if (MyData.appelData().getListeProfils().size() > 0) {
+                        m.findItem(R.id.add).setVisible(true);
+                    } else {
+                        m.findItem(R.id.add).setVisible(false);
+                    }
                     m.findItem(R.id.suppr).setVisible(false);
                     m.findItem(R.id.edit).setVisible(false);
                     m.findItem(R.id.help).setVisible(true);

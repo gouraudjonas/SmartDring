@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.renderscript.RenderScript;
 import android.support.v4.app.NotificationCompat;
 
 import fr.enac.smartdring.MainActivity;
@@ -142,6 +143,8 @@ public abstract class Rule extends BroadcastReceiver {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
+        // Au vue des Android guidelines, nous accordons une faible priorité pour ces notifications.
+        mBuilder.setPriority(Notification.PRIORITY_LOW);
         final int mNotificationId = 2;
         NotificationManager mNotifyMgr = (NotificationManager) ctx.getSystemService(ctx.NOTIFICATION_SERVICE);
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
