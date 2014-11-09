@@ -17,6 +17,7 @@ import fr.enac.smartdring.modele.profiles.Profil;
  */
 public class GeoRule extends Rule implements LocationListener {
     private final float CURRENT_POSITION_RAYON = 1f; //mètres
+    private String tmpKey = "";
     private boolean indoor;
     private boolean out = true; // Si l'on est déjà dans la zone.
     private Hashtable<String,Position> locListe;
@@ -55,7 +56,7 @@ public class GeoRule extends Rule implements LocationListener {
     }
 
     public Hashtable<String,Position> getLocListe (){
-        return this.locListe;
+        return (Hashtable<String, Position>) this.locListe.clone();
     }
     /* -- -- */
 
@@ -82,17 +83,21 @@ public class GeoRule extends Rule implements LocationListener {
             }
             else {
                 isIn = false;
+                if (tmpKey.equals(key)){
+                    out = true;
+                }
             }
 
             if (isIn == indoor && activationAllowed && out){
+                tmpKey = key;
                 out = false;
                 activationProfil(this.getRuleProfil());
-                super.sendNotification("Entrée zone : "+ locListe.get(key).getId(), "Activation du profil " + super.getRuleName());
+                super.sendNotification("Entrée zone : "+ locListe.get(key).getId(), "Activation du profil " + super.getRuleProfil().getName());
                 break;
             } else if (isIn == !indoor && activationAllowed && !out){
                 out = true;
                 activationProfil(this.getRuleProfil());
-                super.sendNotification("Sortie zone : "+ locListe.get(key).getId(), "Activation du profil " + super.getRuleName());
+                super.sendNotification("Sortie zone : "+ locListe.get(key).getId(), "Activation du profil " + super.getRuleProfil().getName());
                 break;
             }
         }

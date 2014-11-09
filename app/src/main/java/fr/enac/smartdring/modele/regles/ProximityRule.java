@@ -56,7 +56,7 @@ public class ProximityRule extends Rule implements SensorEventListener {
             if (this.activationAllowed) {
                 if (distance == 0) {
                     activationProfil(this.getRuleProfil());
-                    super.sendNotification("Survole détecté", "Activation du profil " + super.getRuleName());
+                    super.sendNotification("Survole détecté", "Activation du profil " + super.getRuleProfil().getName());
                     somethingClose = true;
                     this.active = true;
                 } else {

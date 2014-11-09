@@ -51,7 +51,7 @@ public class FlippingRule extends Rule implements SensorEventListener {
             if (this.activationAllowed) {
                 if (Math.abs(pitch_angle) >= 135) {
                     activationProfil(this.getRuleProfil());
-                    super.sendNotification("Téléphone retourné", "Activation du profil " + super.getRuleName());
+                    super.sendNotification("Téléphone retourné", "Activation du profil " + super.getRuleProfil().getName());
                     estRetourne = true;
                     this.active = true;
                 } else if (Math.abs(pitch_angle) < 90 && estRetourne) {

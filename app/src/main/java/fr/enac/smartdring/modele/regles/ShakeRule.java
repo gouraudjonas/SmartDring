@@ -77,7 +77,7 @@ public class ShakeRule extends Rule implements SensorEventListener {
             if (MyService.isIncomingCall() || !onlyOnRing) {
                 if (mShakeCount > 1 && this.activationAllowed) {
                     activationProfil(this.getRuleProfil());
-                    super.sendNotification("Téléphone secoué", "Activation du profil " + super.getRuleName());
+                    super.sendNotification("Téléphone secoué", "Activation du profil " + super.getRuleProfil().getName());
                 }
             }
         }

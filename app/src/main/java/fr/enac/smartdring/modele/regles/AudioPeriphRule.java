@@ -46,7 +46,7 @@ public class AudioPeriphRule extends Rule {
                         break;
                     case 1:
                         activationProfil(this.getRuleProfil());
-                        super.sendNotification("Ecouteurs détectés", "Activation du profil " + super.getRuleName());
+                        super.sendNotification("Ecouteurs détectés", "Activation du profil " + super.getRuleProfil().getName());
                         this.active = true;
                         break;
                 }

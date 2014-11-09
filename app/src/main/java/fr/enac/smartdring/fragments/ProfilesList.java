@@ -2,6 +2,7 @@ package fr.enac.smartdring.fragments;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,11 +65,13 @@ public class ProfilesList extends ArrayAdapter<String> {
         if (parent.getId()==R.id.idRulesList){
             int k = 0;
             for (k=0;k<MyData.appelData().getListeRules().size();k++){
-                if (web[position].contains(MyData.appelData().getListeRules().get(k).getRuleName())){
+                int index = web[position].indexOf("\n");
+                String tmp = web[position].substring(0, index);
+                if (tmp.equals(MyData.appelData().getListeRules().get(k).getRuleName())){
                     break;
                 }
             }
-            if (MyData.appelData().getListeRules().get(kb).isActivationAllowed()){
+            if (MyData.appelData().getListeRules().get(k).isActivationAllowed()){
                 rowView.setAlpha(1f);
             }
             else {

@@ -56,7 +56,7 @@ public class TimerRule extends Rule {
                        && ruleCondition.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)
                        && ruleCondition.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)){
                     activationProfil(this.getRuleProfil());
-                    super.sendNotification("Date et heure atteintes", "Activation du profil " + super.getRuleName());
+                    super.sendNotification("Date et heure atteintes", "Activation du profil " + super.getRuleProfil().getName());
                 }
             }
         }

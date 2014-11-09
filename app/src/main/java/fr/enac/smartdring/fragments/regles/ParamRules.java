@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,12 +36,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
 
 import fr.enac.smartdring.MainActivity;
 import fr.enac.smartdring.map.MyMap;
 import fr.enac.smartdring.MyService;
 import fr.enac.smartdring.R;
 import fr.enac.smartdring.fragments.ProfilesList;
+import fr.enac.smartdring.modele.Position;
 import fr.enac.smartdring.sauvegarde.MyData;
 import fr.enac.smartdring.modele.profiles.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
@@ -96,7 +99,7 @@ public class ParamRules extends Activity {
     private Button boutonDate, boutonTime;
     private TextView afficheDate, afficheTime;
     private RadioGroup mapRadio;
-    private RadioButton mapIn;
+    private RadioButton mapIn, mapOut;
     private CheckBox ringCondition;
     String date, heure;
     int year, month, day, hour, minute;
@@ -120,6 +123,7 @@ public class ParamRules extends Activity {
         boutonTime = (Button) this.findViewById(R.id.selectTime);
         mapRadio = (RadioGroup) this.findViewById(R.id.map_radio);
         mapIn = (RadioButton) this.findViewById(R.id.radio_in);
+        mapOut = (RadioButton) this.findViewById(R.id.radio_out);
         ringCondition = (CheckBox) this.findViewById(R.id.check_phone_ring_condition);
         /* ---- ---- */
 
@@ -329,7 +333,10 @@ public class ParamRules extends Activity {
         if (!MyData.appelData().isCreateRegle() && MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum()) instanceof GeoRule){
             GeoRule tmp = (GeoRule) MyData.appelData().getListeRules().get(MyData.appelData().getRegleSelectedNum());
             mapIn.setChecked(tmp.getIndoor());
-            MyData.appelData().setMyLoc(tmp.getLocListe());
+            mapOut.setChecked(!tmp.getIndoor());
+            if (MyData.appelData().getTmpRule() == null) {
+                MyData.appelData().setMyLoc(tmp.getLocListe());
+            }
         } else {
             mapIn.setChecked(true);
             if (MyData.appelData().getTmpRule() == null){
@@ -379,11 +386,15 @@ public class ParamRules extends Activity {
         if (MyData.appelData().isCreateRegle()) {
             m.findItem(R.id.save).setVisible(false);
         }
+        if (!ruleName.getText().toString().equals("")){
+            m.findItem(R.id.save).setVisible(true);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        MyData.appelData().setTmpRule(null);
         int id = item.getItemId();
         if (id == R.id.save) {
             Rule r = null;
@@ -400,7 +411,7 @@ public class ParamRules extends Activity {
                     r = new TimerRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), c, this);
                     break;
                 case Geolocalisation:
-                    r = new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapIn.isChecked(), MyData.appelData().getMyLoc(), this);
+                    r = new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapIn.isChecked(), (Hashtable<String, Position>) MyData.appelData().getMyLoc().clone(), this);
                     break;
                 case Something_Close:
                     r = new ProximityRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), ringCondition.isChecked(),this);
@@ -457,8 +468,7 @@ public class ParamRules extends Activity {
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
                 ringCondition.setVisibility(View.VISIBLE);
-                ruleIndication.setText("Actif si l'écran du téléphone est face contre sol et " +
-                        "qu'il y a un appel.");
+                ruleIndication.setText("Actif si l'écran du téléphone est face contre sol.");
                 break;
             case Heure_Atteinte:
                 map.setVisibility(View.GONE);
@@ -493,8 +503,7 @@ public class ParamRules extends Activity {
                 boutonDate.setVisibility(View.GONE);
                 boutonTime.setVisibility(View.GONE);
                 ringCondition.setVisibility(View.VISIBLE);
-                ruleIndication.setText("Actif si un objet est proche de l'écran du téléphone " +
-                        "et qu'il y a un appel.");
+                ruleIndication.setText("Actif si un objet est proche de l'écran du téléphone.");
                 break;
             case Secouer:
                 map.setVisibility(View.GONE);
