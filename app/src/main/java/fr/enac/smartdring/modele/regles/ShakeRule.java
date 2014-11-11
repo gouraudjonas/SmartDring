@@ -15,14 +15,16 @@ import fr.enac.smartdring.modele.profiles.Profil;
  * Created by chevalier on 24/10/14.
  */
 public class ShakeRule extends Rule implements SensorEventListener {
+
     private static final float SHAKE_THRESHOLD_GRAVITY = 2.7F;
     private static final int SHAKE_SLOP_TIME_MS = 500;
     private static final int SHAKE_COUNT_RESET_TIME_MS = 3000;
     private long mShakeTimestamp;
     private int mShakeCount;
-    private boolean onlyOnRing;
+    private int onlyOnRing;
 
-    public ShakeRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Boolean onlyOnRing,Context ctx) {
+    public ShakeRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int onlyOnRing,
+                     Context ctx) {
         super(ruleName, ruleProfil, ruleIconId, ctx);
         this.onlyOnRing = onlyOnRing;
     }
@@ -36,15 +38,23 @@ public class ShakeRule extends Rule implements SensorEventListener {
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
     public ShakeRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
-                           int isActive, Boolean onlyOnRing, Context ctx){
+                           int isActive, int onlyOnRing, Context ctx){
         super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive, ctx);
+        this.onlyOnRing = onlyOnRing;
+    }
+
+    public int isOnlyOnRing(){
+        return onlyOnRing;
+    }
+
+    public void setOnlyOnRing(int only){
+        this.onlyOnRing = only;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         //Rien à faire.
     }
-
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -74,7 +84,7 @@ public class ShakeRule extends Rule implements SensorEventListener {
 
             mShakeTimestamp = now;
             mShakeCount++;
-            if (MyService.isIncomingCall() || !onlyOnRing) {
+            if (MyService.isIncomingCall() || onlyOnRing == 0) {
                 if (mShakeCount > 1 && this.activationAllowed) {
                     activationProfil(this.getRuleProfil());
                     super.sendNotification("Téléphone secoué", "Activation du profil " + super.getRuleProfil().getName());

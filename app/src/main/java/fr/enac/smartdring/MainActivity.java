@@ -5,19 +5,13 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import fr.enac.smartdring.fragments.profiles.ParamProfile;
 import fr.enac.smartdring.fragments.regles.ParamRules;
@@ -61,7 +55,7 @@ public class MainActivity extends FragmentActivity implements TabListener {
         // chargement des donnees vers MyData
         if (MyData.appelData().getListeProfils().isEmpty()) {
             DataSaver.appelDataSaver(this).openFiles();
-            DataSaver.appelDataSaver(this).getData();
+            DataSaver.appelDataSaver(this).getData(this);
         }
 
         viewPager = (ViewPager) findViewById(R.id.pager);

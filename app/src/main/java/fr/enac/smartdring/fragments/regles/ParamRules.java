@@ -15,7 +15,6 @@ import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,12 +38,11 @@ import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
 import fr.enac.smartdring.MainActivity;
-import fr.enac.smartdring.map.MyMap;
 import fr.enac.smartdring.MyService;
 import fr.enac.smartdring.R;
 import fr.enac.smartdring.fragments.ProfilesList;
+import fr.enac.smartdring.map.MyMap;
 import fr.enac.smartdring.modele.Position;
-import fr.enac.smartdring.sauvegarde.MyData;
 import fr.enac.smartdring.modele.profiles.Profil;
 import fr.enac.smartdring.modele.regles.AudioPeriphRule;
 import fr.enac.smartdring.modele.regles.FlippingRule;
@@ -53,6 +51,7 @@ import fr.enac.smartdring.modele.regles.ProximityRule;
 import fr.enac.smartdring.modele.regles.Rule;
 import fr.enac.smartdring.modele.regles.ShakeRule;
 import fr.enac.smartdring.modele.regles.TimerRule;
+import fr.enac.smartdring.sauvegarde.MyData;
 
 /**
  * Cette classe permet à l'utilisateur de rentrer une règle de gestion automatique des profils.
@@ -404,20 +403,26 @@ public class ParamRules extends Activity {
                             typeRegle.getIconeId(), this);
                     break;
                 case Telephone_Retourne:
-                    r = new FlippingRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), ringCondition.isChecked(), this);
+                    r = new FlippingRule(ruleName.getText().toString(), profilActivation,
+                            typeRegle.getIconeId(), ringCondition.isChecked() ? 1:0, this);
                     break;
                 case Heure_Atteinte:
                     GregorianCalendar c = new GregorianCalendar(year, month, day, hour, minute);
-                    r = new TimerRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), c, this);
+                    r = new TimerRule(ruleName.getText().toString(), profilActivation,
+                            typeRegle.getIconeId(), c, this);
                     break;
                 case Geolocalisation:
-                    r = new GeoRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), mapIn.isChecked(), (Hashtable<String, Position>) MyData.appelData().getMyLoc().clone(), this);
+                    r = new GeoRule(ruleName.getText().toString(), profilActivation,
+                            typeRegle.getIconeId(), mapIn.isChecked(),
+                            (Hashtable<String, Position>) MyData.appelData().getMyLoc().clone(), this);
                     break;
                 case Something_Close:
-                    r = new ProximityRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), ringCondition.isChecked(),this);
+                    r = new ProximityRule(ruleName.getText().toString(), profilActivation,
+                            typeRegle.getIconeId(), ringCondition.isChecked() ? 1:0,this);
                     break;
                 case Secouer:
-                    r = new ShakeRule(ruleName.getText().toString(), profilActivation, typeRegle.getIconeId(), ringCondition.isChecked(),this);
+                    r = new ShakeRule(ruleName.getText().toString(), profilActivation,
+                            typeRegle.getIconeId(), ringCondition.isChecked() ? 1:0,this);
                     break;
             }
             if (MyData.appelData().isCreateRegle()) {

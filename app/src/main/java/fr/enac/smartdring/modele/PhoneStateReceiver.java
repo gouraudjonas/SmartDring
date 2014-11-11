@@ -9,6 +9,7 @@ import fr.enac.smartdring.MyService;
 
 /**
  * Classe permettant de savoir si l'utilisateur téléphone ou est appelé.
+ *
  * Created by sacapuce on 12/10/2014.
  */
 public class PhoneStateReceiver extends BroadcastReceiver {

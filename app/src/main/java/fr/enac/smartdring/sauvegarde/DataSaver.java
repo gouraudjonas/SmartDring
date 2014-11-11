@@ -80,7 +80,7 @@ public class DataSaver {
     /**
      * Ouvre le fichier specifie et renvoie les donnees qu'il contient
      */
-    public void getData() {
+    public void getData(Context ctx) {
 
         // On traite les profils
         try {
@@ -129,33 +129,36 @@ public class DataSaver {
 
                     // convention pour le type de regle : 0 -> AudioPeriphRule ; 1 -> FlippingRule ;
                     // 2 -> ProximityRule ; 3 -> ShakeRule ; 4 -> TimerRule
-                  /*  switch (Integer.parseInt(parts[0])) {
+                    switch (Integer.parseInt(parts[0])) {
                         case 0:
                             listRules.add(new AudioPeriphRule(parts[1],
                                     myProfil, Integer.parseInt(parts[3]),
-                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5]), ctx));
                             break;
                         case 1:
                             listRules.add(new FlippingRule(parts[1],
                                     myProfil, Integer.parseInt(parts[3]),
-                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5]),
+                                    Integer.parseInt(parts[6]), ctx));
                             break;
                         case 2:
                             listRules.add(new ProximityRule(parts[1],
                                     myProfil, Integer.parseInt(parts[3]),
-                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5]),
+                                    Integer.parseInt(parts[6]), ctx));
                             break;
                         case 3:
                             listRules.add(new ShakeRule(parts[1],
                                     myProfil, Integer.parseInt(parts[3]),
-                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5]),
+                                    Integer.parseInt(parts[6]), ctx));
                             break;
                         case 4:
                             listRules.add(new TimerRule(parts[1],
                                     myProfil, Integer.parseInt(parts[3]),
-                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5])));
+                                    Integer.parseInt(parts[4]), Integer.parseInt(parts[5]), ctx));
                             break;
-                    }*/
+                    }
                 } catch (NumberFormatException e) {
                     Log.e("DataSaver", "Probleme de recreation des regles");
                     e.printStackTrace();
@@ -228,13 +231,13 @@ public class DataSaver {
                 // 2 -> ProximityRule ; 3 -> ShakeRule ; 4 -> TimerRule
                 if (myRule instanceof AudioPeriphRule)
                     writer.write("0");
-                if (myRule instanceof FlippingRule)
+                else if (myRule instanceof FlippingRule)
                     writer.write("1");
-                if (myRule instanceof ProximityRule)
+                else if (myRule instanceof ProximityRule)
                     writer.write("2");
-                if (myRule instanceof ShakeRule)
+                else if (myRule instanceof ShakeRule)
                     writer.write("3");
-                if (myRule instanceof TimerRule)
+                else if (myRule instanceof TimerRule)
                     writer.write("4");
 
                 // sauvegarde du reste des donnees de la regle
@@ -251,6 +254,15 @@ public class DataSaver {
                     writer.write(" 1");
                 else
                     writer.write(" 0");
+
+                // On test pour savoir si la regle comprend l'option "uniquement si un appel est
+                // en cours"
+                if (myRule instanceof FlippingRule)
+                    writer.write(" " + ((FlippingRule) myRule).isOnlyOnRing());
+                else if (myRule instanceof ProximityRule)
+                    writer.write(" " + ((ProximityRule) myRule).isOnlyOnRing());
+                else if (myRule instanceof ShakeRule)
+                    writer.write(" " + ((ShakeRule) myRule).isOnlyOnRing());
 
                 // S'il s'agit du dernier profil, on ne met pas de nouvelle ligne apres
                 if (!(i == MyData.appelData().getListeProfils().size() - 1))

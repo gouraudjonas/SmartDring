@@ -18,10 +18,11 @@ public class FlippingRule extends Rule implements SensorEventListener {
      * Vaut true si le téléphone est face contre le sol, false sinon.
      */
     private boolean estRetourne = false;
-    private boolean onlyOnRing;
+    private int onlyOnRing;
 
 
-    public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId, Boolean onlyOnRing, Context ctx){
+    public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int onlyOnRing,
+                        Context ctx){
         super(ruleName, ruleProfil, ruleIconId, ctx);
         this.onlyOnRing = onlyOnRing;
     }
@@ -36,22 +37,30 @@ public class FlippingRule extends Rule implements SensorEventListener {
      * @param ruleIconId L'identifiant de l'icone associée à la règle.
      */
     public FlippingRule(String ruleName, Profil ruleProfil, Integer ruleIconId, int activationAllowed,
-                           int isActive, Boolean onlyOnRing, Context ctx){
+                           int isActive, int onlyOnRing, Context ctx){
         super(ruleName, ruleProfil, ruleIconId, activationAllowed, isActive, ctx);
+        this.onlyOnRing = onlyOnRing;
     }
 
+    public int isOnlyOnRing(){
+        return onlyOnRing;
+    }
 
+    public void setOnlyOnRing(int only){
+        this.onlyOnRing = only;
+    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float pitch_angle = event.values[1];
 
         // L'effet ne doit se faire que s'il y a un appel, donc on test d'abord ca
-        if (MyService.isIncomingCall() || !onlyOnRing) {
+        if (MyService.isIncomingCall() || onlyOnRing == 0) {
             if (this.activationAllowed) {
                 if (Math.abs(pitch_angle) >= 135) {
                     activationProfil(this.getRuleProfil());
-                    super.sendNotification("Téléphone retourné", "Activation du profil " + super.getRuleProfil().getName());
+                    super.sendNotification("Téléphone retourné", "Activation du profil " +
+                            super.getRuleProfil().getName());
                     estRetourne = true;
                     this.active = true;
                 } else if (Math.abs(pitch_angle) < 90 && estRetourne) {

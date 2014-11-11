@@ -57,7 +57,7 @@ public enum EnumTypeRule {
                 return "Téléphone retourné";
 
             case Something_Close:
-                return "Survole du téléphone";
+                return "Survol du téléphone";
 
             case Secouer:
                 return "Téléphone secoué";
